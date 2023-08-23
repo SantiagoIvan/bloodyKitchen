@@ -1,7 +1,11 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/* Singleton, ya que es SinglePLayer
+ * Cuando lo haga Multiplayer, ahi sale refactor
+ */
 public class PlayerController : MonoBehaviour
 {
     [SerializeField]
@@ -12,6 +16,7 @@ public class PlayerController : MonoBehaviour
     
     private bool isWalking;
     private Vector3 lastMovementDirection;
+    private ClearCounter selectedClearCounter;
 
 
     private const float RADIUS = .7f; // el scale de la esfera del cuerpo dividido 2.
@@ -20,6 +25,27 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private GameInput gameInput;
 
+    /* La idea es la siguiente: cada vez que cambia la selección de una mesada, se dispara el evento. TODOS los ClearCounters van a estar escuchando por el evento
+     * y van a fijarse si se corresponde con alguno de ellos y si es asi, van a actualizar la parte visual.
+     * La contra? que es viable en un contexto asi, mapa pequeño, no nos importa el consumo de memoria en este caso.
+     * Si necesito pasar datos cuando disparo el evento, lo hago con el generic ese y con la clase que tiene los datos asociados.
+    */
+    public event EventHandler<OnSelectedCounterChangedEventArgs> OnSelectedCounterChanged;
+    public class OnSelectedCounterChangedEventArgs : EventArgs
+    {
+        public ClearCounter selectedClearCounter;
+    }
+
+
+    public static PlayerController Instance { get; private set; }
+    private void Awake()
+    {
+        if (Instance != null)
+        {
+            Debug.LogError("More than 1 instance of a Player");
+        }
+        Instance = this;
+    }
 
 
     /*
@@ -39,7 +65,7 @@ public class PlayerController : MonoBehaviour
      */
 
 
-    /**
+    /*
      * ROTACIÓN
      * Para manejar la rotación hacia la dirección donde me muevo, hay varias maneras
      * 1 - transform.rotation
@@ -56,36 +82,9 @@ public class PlayerController : MonoBehaviour
 
     private void GameInput_OnInteractAction(object sender, System.EventArgs e)
     {
-        /* 1)
-         * Con un raycast alcanza ya que no estoy pensando en no chocarme con cosas, simplemente saber si tengo algo adelante para interactuar, y qué objeto
-         * Hay muchas firmas de Raycast, algunas devuelven un booleano, que sirve para saber si hay algo adelante o no.
-         * Como en este caso me interesa interactuar, necesito obtener la referencia del objeto. Para ello, utilizo la firma con el parametro "out RaycastHit info".
-         * Esta variable referencia al objeto con el que colisiona el jugador. (side effect)
-         * 
-         * 2) Si yo me quedo parado, no me estoy moviendo (duh). Eso quiere decir que el vector move será nulo y por lo tanto no voy a mandar un Raycast a ningun lugar, por lo que
-         * por más que tenga un objeto en frente, no voy a detectarlo.
-         * Para solucionar esto, cuando guardarme una referencia de la ultima dirección a la que me moví. De ahi nace lastMovementDirection
-         * 
-         * 3) En este juego solamente voy a interactuar con clearCounters, pero en caso de tener un monton de clases distintas para interactuar, como abrir puertar,
-           interactuar con npcs, apretar botones y demás, hay otro enfoque mucho mejor que una lluvia de ifs
-        */
-        Debug.Log("Intento de interacción detectada");
-        Vector2 inputVector = gameInput.GetMovementNormalizedVector();
-        Vector3 move = new Vector3(inputVector.x, 0, inputVector.y);
-
-        if (move != Vector3.zero)
+        if (selectedClearCounter)
         {
-            lastMovementDirection = move;
-        }
-
-        if (Physics.Raycast(transform.position, lastMovementDirection, out RaycastHit hit, INTERACT_DISTANCE)) // Hay algo adelante?
-        {
-
-            if (hit.transform.TryGetComponent<ClearCounter>(out ClearCounter clearCounter))
-            {
-                clearCounter.Interact();
-            }
-
+            selectedClearCounter.Interact();
         }
     }
 
@@ -139,6 +138,19 @@ public class PlayerController : MonoBehaviour
 
     private void HandleInteractions()
     {
+        /* 1)
+         * Con un raycast alcanza ya que no estoy pensando en no chocarme con cosas, simplemente saber si tengo algo adelante para interactuar, y qué objeto
+         * Hay muchas firmas de Raycast, algunas devuelven un booleano, que sirve para saber si hay algo adelante o no.
+         * Como en este caso me interesa interactuar, necesito obtener la referencia del objeto. Para ello, utilizo la firma con el parametro "out RaycastHit info".
+         * Esta variable referencia al objeto con el que colisiona el jugador. (side effect)
+         * 
+         * 2) Si yo me quedo parado, no me estoy moviendo (duh). Eso quiere decir que el vector move será nulo y por lo tanto no voy a mandar un Raycast a ningun lugar, por lo que
+         * por más que tenga un objeto en frente, no voy a detectarlo.
+         * Para solucionar esto, cuando guardarme una referencia de la ultima dirección a la que me moví. De ahi nace lastMovementDirection
+         * 
+         * 3) En este juego solamente voy a interactuar con clearCounters, pero en caso de tener un monton de clases distintas para interactuar, como abrir puertar,
+           interactuar con npcs, apretar botones y demás, hay otro enfoque mucho mejor que una lluvia de ifs
+        */
         Vector2 inputVector = gameInput.GetMovementNormalizedVector();
         Vector3 move = new Vector3(inputVector.x, 0, inputVector.y);
 
@@ -149,13 +161,30 @@ public class PlayerController : MonoBehaviour
 
         if (Physics.Raycast(transform.position, lastMovementDirection, out RaycastHit hit, INTERACT_DISTANCE)) // Hay algo adelante?
         {
-
             if (hit.transform.TryGetComponent<ClearCounter>(out ClearCounter clearCounter))
             {
-                //clearCounter.Interact();
+                if(selectedClearCounter != clearCounter) { 
+                    SetSelectedCounter(clearCounter);
+                }
             }
-
+            else
+            {
+                SetSelectedCounter(null);
+            }
         }
+        else
+        {
+            SetSelectedCounter(null);
+        }
+    }
+
+    private void SetSelectedCounter(ClearCounter selectedCounter)
+    {
+        selectedClearCounter = selectedCounter;
+        OnSelectedCounterChanged?.Invoke(this, new OnSelectedCounterChangedEventArgs
+        {
+            selectedClearCounter = selectedClearCounter
+        });
     }
     public bool IsWalking()
     {
