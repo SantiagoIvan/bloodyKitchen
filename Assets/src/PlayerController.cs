@@ -6,7 +6,7 @@ using UnityEngine;
 /* Singleton, ya que es SinglePLayer
  * Cuando lo haga Multiplayer, ahi sale refactor
  */
-public class PlayerController : MonoBehaviour
+public class PlayerController : MonoBehaviour, IKitchenObjectParent
 {
     [SerializeField]
     private float movementSpeed = 5f;
@@ -17,6 +17,10 @@ public class PlayerController : MonoBehaviour
     private bool isWalking;
     private Vector3 lastMovementDirection;
     private ClearCounter selectedClearCounter;
+    [SerializeField]
+    private KitchenObject kitchenObject;
+    [SerializeField]
+    private Transform spawnPoint;
 
 
     private const float RADIUS = .7f; // el scale de la esfera del cuerpo dividido 2.
@@ -190,4 +194,10 @@ public class PlayerController : MonoBehaviour
     {
         return isWalking;
     }
+
+    public Transform GetSpawnPoint() { return spawnPoint; }
+    public void SetKitchenObject(KitchenObject ko) { kitchenObject = ko; }
+    public KitchenObject GetKitchenObject() { return kitchenObject; }
+    public void ClearKitchenObject() { kitchenObject = null; }
+    public bool HasKitchenObject() { return kitchenObject != null; }
 }

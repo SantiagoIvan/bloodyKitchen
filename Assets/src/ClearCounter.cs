@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ClearCounter : MonoBehaviour
+public class ClearCounter : MonoBehaviour, IKitchenObjectParent
 {
     /* se lo puede poner como GameObject, es indistinto en este caso, investigar la diferencia entre ambos.
     [SerializeField] private Transform tomatoPrefab;
@@ -21,36 +21,27 @@ public class ClearCounter : MonoBehaviour
     [SerializeField] private KitchenObjectSO kitchenObjectSO;
     [SerializeField] private Transform spawnPoint;
     private KitchenObject kitchenObject;
-    public ClearCounter cc2;
-
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            if(kitchenObject != null)
-            {
-                kitchenObject.SetClearCounter(cc2);
-                Debug.Log(kitchenObject.GetClearCounter());
-                kitchenObject = null;
-            }
-        }
-    }
+    public ClearCounter newClearCounter; // borrar despues
 
     public void Interact()
     {
         if(kitchenObject == null)
         {
             Transform kitchenObjectSpawned = Instantiate(kitchenObjectSO.GetPrefab(), spawnPoint);
-            kitchenObjectSpawned.localPosition = Vector3.zero; // posición local dentro del objeto, no local
-            kitchenObject = kitchenObjectSpawned.GetComponent<KitchenObject>();
-            kitchenObject.SetClearCounter(this);
+            kitchenObjectSpawned.GetComponent<KitchenObject>().SetNewParent(this);
+            
         }
         else
         {
-            Debug.Log(kitchenObject.GetClearCounter());
+            // si ya hay un objeto sobre la mesada, el jugador lo agarra. Asi que se lo tengo que dar de alguna forma. Para ello, el Clear Counter y el Player Controller deberían poder entender el mismo mensaje, pickUp o algo asi
+
+            kitchenObject.SetNewParent(PlayerController.Instance);
         }
     }
 
     public Transform GetSpawnPoint() { return spawnPoint; }
     public void SetKitchenObject(KitchenObject ko) { kitchenObject = ko; }
+    public KitchenObject GetKitchenObject() {  return kitchenObject; }
+    public void ClearKitchenObject() { kitchenObject = null; }
+    public bool HasKitchenObject() {  return kitchenObject != null; }
 }
