@@ -1,12 +1,14 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-public class ContainerCounter : BaseCounter, IKitchenObjectParent
+/*
+ * En la parte visual del prefab, elimine del hijo "Selected" a la fotito del spawn porque no es necesario resaltar eso al acercarse el jugador, ya que se resalta toda la mesada.
+ */
+public class ContainerCounter : BaseCounter
 {
     [SerializeField] private KitchenObjectSO kitchenObjectSO;
-    [SerializeField] private Transform spawnPoint;
-    private KitchenObject kitchenObject;
+    public EventHandler OnPlayerGrabbedUp;
 
     /* Por lo que creo yo, a  la primera interacción, si el jugador tiene las manos vacías, debería spawnearle en la mano el item que dropee esta mesada.
      */
@@ -16,8 +18,9 @@ public class ContainerCounter : BaseCounter, IKitchenObjectParent
 
         if (!player.GetKitchenObject())
         {
-            Transform kitchenObjectSpawned = Instantiate(kitchenObjectSO.GetPrefab(), spawnPoint);
+            Transform kitchenObjectSpawned = Instantiate(kitchenObjectSO.GetPrefab());
             kitchenObjectSpawned.GetComponent<KitchenObject>().SetNewParent(player);
+            OnPlayerGrabbedUp?.Invoke(this, EventArgs.Empty);
         }
         else
         {
@@ -25,9 +28,6 @@ public class ContainerCounter : BaseCounter, IKitchenObjectParent
         }
 
     }
-    public Transform GetSpawnPoint() { return spawnPoint; }
-    public void SetKitchenObject(KitchenObject ko) { kitchenObject = ko; }
-    public KitchenObject GetKitchenObject() { return kitchenObject; }
-    public void ClearKitchenObject() { kitchenObject = null; }
-    public bool HasKitchenObject() { return kitchenObject != null; }
+
+    public KitchenObjectSO GetKitchenObjectSO() { return kitchenObjectSO; }
 }

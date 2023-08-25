@@ -17,7 +17,6 @@ public class KitchenObject : MonoBehaviour
     public KitchenObjectSO GetKitchenObjectSO() { return kitchenObjectSO; }
     public IKitchenObjectParent GetParent() { return currentParent; }
     public void SetNewParent(IKitchenObjectParent newParent) {
-        Debug.Log("KO: Setting up new Clear Counter. Old one: " + this.currentParent);
         if (newParent.HasKitchenObject())
         {
             Debug.LogError("That Parent already has a kitchen Object");
@@ -27,7 +26,7 @@ public class KitchenObject : MonoBehaviour
             currentParent.ClearKitchenObject();
         }
         this.currentParent = newParent;
-        Debug.Log("KO: Setting up new Clear Counter. New one: " + this.currentParent);
+        Debug.Log("KO: Setting up new Clear Counter. New one: " + currentParent.ToString());
         this.currentParent.SetKitchenObject(this);
         transform.parent = this.currentParent.GetSpawnPoint();
         transform.localPosition = Vector3.zero;

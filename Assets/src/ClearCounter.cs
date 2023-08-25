@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ClearCounter : BaseCounter, IKitchenObjectParent
+public class ClearCounter : BaseCounter
 {
     /* se lo puede poner como GameObject, es indistinto en este caso, investigar la diferencia entre ambos.
     [SerializeField] private Transform tomatoPrefab;
@@ -18,8 +18,7 @@ public class ClearCounter : BaseCounter, IKitchenObjectParent
     Entonces ahora, al interactuar, se instancia el prefab que esté dentor del KitchenObjectSO para que aparezca en el spawnPoint
     */
 
-    [SerializeField] private Transform spawnPoint;
-    private KitchenObject kitchenObject;
+    
 
     /* Para el caso de las mesadas, lo que voy a querer hacer es dropear objetos en ellas. Lo que sea que tenga el jugador en la mano
      */
@@ -40,10 +39,4 @@ public class ClearCounter : BaseCounter, IKitchenObjectParent
             Debug.Log("Can't interact with this!!!");
         }
     }
-
-    public Transform GetSpawnPoint() { return spawnPoint; }
-    public void SetKitchenObject(KitchenObject ko) { kitchenObject = ko; }
-    public KitchenObject GetKitchenObject() {  return kitchenObject; }
-    public void ClearKitchenObject() { kitchenObject = null; }
-    public bool HasKitchenObject() {  return kitchenObject != null; }
 }

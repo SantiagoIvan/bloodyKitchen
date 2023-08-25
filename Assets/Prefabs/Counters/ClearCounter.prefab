@@ -318,4 +318,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   baseCounter: {fileID: -2844263443220641152}
-  visualGameObject: {fileID: 4285981446207045232}
+  visualGameObjectArray:
+  - {fileID: 4285981446207045232}

@@ -12,4 +12,5 @@ public class KitchenObjectSO : ScriptableObject
 
     public Transform GetPrefab() { return prefab; }
     public string GetObjectName() { return objectName; }
+    public Sprite GetSprite() { return sprite; }
 }

@@ -15,7 +15,7 @@ public class SelectedCounterVisual : MonoBehaviour
     [SerializeField]
     private BaseCounter baseCounter;
     [SerializeField]
-    private GameObject visualGameObject; // la mesada en si que voy a pintar al ser seleccionada. Lo que esta adentro del "Selected" del "Prefab"
+    private GameObject[] visualGameObjectArray; // la mesada en si que voy a pintar al ser seleccionada. Lo que esta adentro del "Selected" del "Prefab"
     
     private void Start()
     {
@@ -36,10 +36,16 @@ public class SelectedCounterVisual : MonoBehaviour
 
     private void Show()
     {
-        visualGameObject.SetActive(true);
+        foreach(GameObject visualGameObject in  visualGameObjectArray)
+        {
+            visualGameObject.SetActive(true);
+        }
     }
     private void Hide()
     {
-        visualGameObject.SetActive(false);
+        foreach (GameObject visualGameObject in visualGameObjectArray)
+        {
+            visualGameObject.SetActive(false);
+        }
     }
 }

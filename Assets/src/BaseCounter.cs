@@ -7,8 +7,19 @@ using UnityEngine;
  * El Base Counter Script lo creo para que el jugador pueda interactuar con cualquier tipo de Mesada, y que despues cada implementación haga lo suyo:
  * - Si es un Container Counter, debería spawnearme en la mano un tomate o lo que sea
  * - Si es una mesada limpia, debería poder dejar un item
+ * 
+ * Además, como los distintos tipos de mesada tienen diferente cantidad de "partes" para renderizar, se me rompió el SelectedCounterVisual.cs. Antes soportaba solo 1, asi que modifiqué esa propiedad
+ * para que sea un array.
+ * 
  */
-public class BaseCounter : MonoBehaviour
+public class BaseCounter : MonoBehaviour, IKitchenObjectParent
 {
+    [SerializeField] protected Transform spawnPoint;
+    protected KitchenObject kitchenObject;
     public virtual void Interact() { }
+    public Transform GetSpawnPoint() { return spawnPoint; }
+    public void SetKitchenObject(KitchenObject ko) { kitchenObject = ko; }
+    public KitchenObject GetKitchenObject() { return kitchenObject; }
+    public void ClearKitchenObject() { kitchenObject = null; }
+    public bool HasKitchenObject() { return kitchenObject != null; }
 }
