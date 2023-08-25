@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ClearCounter : MonoBehaviour, IKitchenObjectParent
+public class ClearCounter : BaseCounter, IKitchenObjectParent
 {
     /* se lo puede poner como GameObject, es indistinto en este caso, investigar la diferencia entre ambos.
     [SerializeField] private Transform tomatoPrefab;
@@ -18,24 +18,26 @@ public class ClearCounter : MonoBehaviour, IKitchenObjectParent
     Entonces ahora, al interactuar, se instancia el prefab que esté dentor del KitchenObjectSO para que aparezca en el spawnPoint
     */
 
-    [SerializeField] private KitchenObjectSO kitchenObjectSO;
     [SerializeField] private Transform spawnPoint;
     private KitchenObject kitchenObject;
-    public ClearCounter newClearCounter; // borrar despues
 
-    public void Interact()
+    /* Para el caso de las mesadas, lo que voy a querer hacer es dropear objetos en ellas. Lo que sea que tenga el jugador en la mano
+     */
+    public override void Interact()
     {
-        if(kitchenObject == null)
+        // Si no hay nada sobre la mesa y el jugador tiene algo en la mano => lo deposita.
+        PlayerController player = PlayerController.Instance;
+        if (player.GetKitchenObject() && !kitchenObject)
         {
-            Transform kitchenObjectSpawned = Instantiate(kitchenObjectSO.GetPrefab(), spawnPoint);
-            kitchenObjectSpawned.GetComponent<KitchenObject>().SetNewParent(this);
-            
+            player.GetKitchenObject().SetNewParent(this);
         }
-        else
+        else if (!player.GetKitchenObject() && kitchenObject)
         {
-            // si ya hay un objeto sobre la mesada, el jugador lo agarra. Asi que se lo tengo que dar de alguna forma. Para ello, el Clear Counter y el Player Controller deberían poder entender el mismo mensaje, pickUp o algo asi
-
+            // si ya hay un objeto sobre la mesada y el jugador tiene las manos vacías => lo agarra
             kitchenObject.SetNewParent(PlayerController.Instance);
+        }else
+        {
+            Debug.Log("Can't interact with this!!!");
         }
     }
 

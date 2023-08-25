@@ -16,7 +16,7 @@ public class PlayerController : MonoBehaviour, IKitchenObjectParent
     
     private bool isWalking;
     private Vector3 lastMovementDirection;
-    private ClearCounter selectedClearCounter;
+    private BaseCounter selectedCounter;
     [SerializeField]
     private KitchenObject kitchenObject;
     [SerializeField]
@@ -37,7 +37,7 @@ public class PlayerController : MonoBehaviour, IKitchenObjectParent
     public event EventHandler<OnSelectedCounterChangedEventArgs> OnSelectedCounterChanged;
     public class OnSelectedCounterChangedEventArgs : EventArgs
     {
-        public ClearCounter selectedClearCounter;
+        public BaseCounter selectedCounter;
     }
 
 
@@ -86,9 +86,9 @@ public class PlayerController : MonoBehaviour, IKitchenObjectParent
 
     private void GameInput_OnInteractAction(object sender, System.EventArgs e)
     {
-        if (selectedClearCounter)
+        if (selectedCounter)
         {
-            selectedClearCounter.Interact();
+            selectedCounter.Interact();
         }
     }
 
@@ -165,10 +165,10 @@ public class PlayerController : MonoBehaviour, IKitchenObjectParent
 
         if (Physics.Raycast(transform.position, lastMovementDirection, out RaycastHit hit, INTERACT_DISTANCE)) // Hay algo adelante?
         {
-            if (hit.transform.TryGetComponent<ClearCounter>(out ClearCounter clearCounter))
+            if (hit.transform.TryGetComponent<BaseCounter>(out BaseCounter counter))
             {
-                if(selectedClearCounter != clearCounter) { 
-                    SetSelectedCounter(clearCounter);
+                if(selectedCounter != counter) { 
+                    SetSelectedCounter(counter);
                 }
             }
             else
@@ -182,12 +182,12 @@ public class PlayerController : MonoBehaviour, IKitchenObjectParent
         }
     }
 
-    private void SetSelectedCounter(ClearCounter selectedCounter)
+    private void SetSelectedCounter(BaseCounter selectedCounter)
     {
-        selectedClearCounter = selectedCounter;
+        this.selectedCounter = selectedCounter;
         OnSelectedCounterChanged?.Invoke(this, new OnSelectedCounterChangedEventArgs
         {
-            selectedClearCounter = selectedClearCounter
+            selectedCounter = this.selectedCounter
         });
     }
     public bool IsWalking()

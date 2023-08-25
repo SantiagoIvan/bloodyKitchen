@@ -13,9 +13,9 @@ using UnityEngine;
 public class SelectedCounterVisual : MonoBehaviour
 {
     [SerializeField]
-    private ClearCounter clearCounter;
+    private BaseCounter baseCounter;
     [SerializeField]
-    private GameObject visualGameObject; // la mesada en si que voy a pintar al ser seleccionada. Lo que esta adentor del "Selected" del "Prefab"
+    private GameObject visualGameObject; // la mesada en si que voy a pintar al ser seleccionada. Lo que esta adentro del "Selected" del "Prefab"
     
     private void Start()
     {
@@ -24,7 +24,7 @@ public class SelectedCounterVisual : MonoBehaviour
 
     private void PlayerController_OnSelectedCounterChanged(object sender, PlayerController.OnSelectedCounterChangedEventArgs e)
     {
-        if (e.selectedClearCounter == clearCounter)
+        if (e.selectedCounter == baseCounter)
         {
             Show();
         }
