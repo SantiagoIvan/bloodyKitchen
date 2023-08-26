@@ -26,7 +26,7 @@ public class ClearCounter : BaseCounter
     {
         // Si no hay nada sobre la mesa y el jugador tiene algo en la mano => lo deposita.
         PlayerController player = PlayerController.Instance;
-        if (player.GetKitchenObject() && !kitchenObject)
+        if (player.GetKitchenObject() && !HasKitchenObject())
         {
             player.GetKitchenObject().SetNewParent(this);
         }

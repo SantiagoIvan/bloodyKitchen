@@ -11,7 +11,6 @@ public class ContainerCounterVisual : MonoBehaviour
     private const string OPEN_CLOSE = "OpenClose";
     [SerializeField] private Animator animator;
     [SerializeField] private ContainerCounter containerCounter;
-    [SerializeField] private GameObject door;
 
     private void Awake()
     {
@@ -20,7 +19,6 @@ public class ContainerCounterVisual : MonoBehaviour
     private void Start()
     {
         containerCounter.OnPlayerGrabbedUp += ContainerCounter_OnPlayerGrabbedUp;
-        door.GetComponent<SpriteRenderer>().sprite = containerCounter.GetKitchenObjectSO().GetSprite();
     }
 
     private void ContainerCounter_OnPlayerGrabbedUp(object sender, System.EventArgs e)
