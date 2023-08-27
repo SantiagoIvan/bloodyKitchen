@@ -26,9 +26,13 @@ public class KitchenObject : MonoBehaviour
             currentParent.ClearKitchenObject();
         }
         this.currentParent = newParent;
-        Debug.Log("KO: Setting up new Clear Counter. New one: " + currentParent.ToString());
         this.currentParent.SetKitchenObject(this);
         transform.parent = this.currentParent.GetSpawnPoint();
         transform.localPosition = Vector3.zero;
+    }
+    public void DestroySelf()
+    {
+        currentParent.ClearKitchenObject();
+        Destroy(gameObject);
     }
 }

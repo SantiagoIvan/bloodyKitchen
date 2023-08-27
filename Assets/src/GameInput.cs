@@ -59,12 +59,20 @@ public class GameInput : MonoBehaviour
 
     private PlayerInputActions inputActions;
     public event EventHandler OnInteractAction;
+    public event EventHandler OnUseObjectAction;
     private void Awake()
     {
         inputActions = new PlayerInputActions();
         inputActions.Player.Enable(); // Se encuentra en Actions maps dentro de la configuración del PlayerInputActions
 
         inputActions.Player.Interact.performed += Interact_performed;
+        inputActions.Player.UseObject.performed += UseObject_performed;
+    }
+
+    private void UseObject_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
+    {
+        Debug.Log("event triggered");
+        OnUseObjectAction?.Invoke(this, EventArgs.Empty);
     }
 
     private void Interact_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)

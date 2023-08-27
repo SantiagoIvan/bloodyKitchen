@@ -17,6 +17,9 @@ public class BaseCounter : MonoBehaviour, IKitchenObjectParent
     [SerializeField] protected Transform spawnPoint;
     protected KitchenObject kitchenObject;
     public virtual void Interact() { }
+    public virtual void Use() {
+        Debug.Log("cant use this object");
+    }
     public Transform GetSpawnPoint() { return spawnPoint; }
     public void SetKitchenObject(KitchenObject ko) { kitchenObject = ko; }
     public KitchenObject GetKitchenObject() { return kitchenObject; }

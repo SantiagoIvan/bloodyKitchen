@@ -11,7 +11,7 @@ public class PlayerController : MonoBehaviour, IKitchenObjectParent
     [SerializeField]
     private float movementSpeed = 5f;
     [SerializeField]
-    private float rotationSpeed = 10f;
+    private float rotationSpeed = 15f;
         
     
     private bool isWalking;
@@ -34,6 +34,7 @@ public class PlayerController : MonoBehaviour, IKitchenObjectParent
      * La contra? que es viable en un contexto asi, mapa pequeño, no nos importa el consumo de memoria en este caso.
      * Si necesito pasar datos cuando disparo el evento, lo hago con el generic ese y con la clase que tiene los datos asociados.
     */
+    public EventHandler OnCuttingActionTriggered;
     public event EventHandler<OnSelectedCounterChangedEventArgs> OnSelectedCounterChanged;
     public class OnSelectedCounterChangedEventArgs : EventArgs
     {
@@ -82,6 +83,7 @@ public class PlayerController : MonoBehaviour, IKitchenObjectParent
     private void Start()
     {
         gameInput.OnInteractAction += GameInput_OnInteractAction; //Listener del evento
+        gameInput.OnUseObjectAction += GameInput_OnUseObjectAction;
     }
 
     private void GameInput_OnInteractAction(object sender, System.EventArgs e)
@@ -89,6 +91,14 @@ public class PlayerController : MonoBehaviour, IKitchenObjectParent
         if (selectedCounter)
         {
             selectedCounter.Interact();
+        }
+    }
+
+    private void GameInput_OnUseObjectAction(object sender, System.EventArgs e)
+    {
+        if (selectedCounter)
+        {
+            selectedCounter.Use();
         }
     }
 
@@ -113,9 +123,11 @@ public class PlayerController : MonoBehaviour, IKitchenObjectParent
         // Si me muevo en diagonal al chocar contra un obstaculo, me fijo si es posible moverme en la dirección paralela.
         if (collisionDetected)
         {
-            //intento moverme en X 
+            /* Intento moverme en X. 
+             * 
+             */
             Vector3 moveX = new Vector3(move.x, 0, 0).normalized; // para evitar moverme a una velocidad diferente. Siempre debe ser un vector unitario
-            collisionDetected = Physics.CapsuleCast(transform.position, transform.position + Vector3.up * PLAYER_HEIGHT, RADIUS, moveX, moveDistance);
+            collisionDetected = move.x != 0 && Physics.CapsuleCast(transform.position, transform.position + Vector3.up * PLAYER_HEIGHT, RADIUS, moveX, moveDistance);
             if (!collisionDetected)
             {
                 move = moveX;
@@ -124,7 +136,7 @@ public class PlayerController : MonoBehaviour, IKitchenObjectParent
             {
                 //ahora intento moverme en el plano z
                 Vector3 moveZ = new Vector3(0, 0, move.z).normalized;
-                collisionDetected = Physics.CapsuleCast(transform.position, transform.position + Vector3.up * PLAYER_HEIGHT, RADIUS, moveZ, moveDistance);
+                collisionDetected = move.z != 0 && Physics.CapsuleCast(transform.position, transform.position + Vector3.up * PLAYER_HEIGHT, RADIUS, moveZ, moveDistance);
                 if (!collisionDetected)
                 {
                     move = moveZ;
@@ -195,6 +207,7 @@ public class PlayerController : MonoBehaviour, IKitchenObjectParent
         return isWalking;
     }
 
+    public BaseCounter GetSelectedCounter() {  return selectedCounter; }
     public Transform GetSpawnPoint() { return spawnPoint; }
     public void SetKitchenObject(KitchenObject ko) { kitchenObject = ko; }
     public KitchenObject GetKitchenObject() { return kitchenObject; }
