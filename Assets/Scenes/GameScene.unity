@@ -1525,6 +1525,12 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -5183827477963554622, guid: 13b96ccde6640aa40b8a1d24b32197f4,
         type: 3}
+      propertyPath: slice
+      value: 
+      objectReference: {fileID: 11400000, guid: 7a592ed3e2def714ebc6c19f030d3e93,
+        type: 2}
+    - target: {fileID: -5183827477963554622, guid: 13b96ccde6640aa40b8a1d24b32197f4,
+        type: 3}
       propertyPath: sliced
       value: 
       objectReference: {fileID: -5532571075318025427, guid: 58dd1097f43ef2f45abcb6fcbc44ca9a,

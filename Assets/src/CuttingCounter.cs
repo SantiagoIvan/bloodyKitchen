@@ -1,11 +1,12 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class CuttingCounter : ClearCounter
 {
-    [SerializeField] private KitchenObject slice; // TODO borrar esto
+    [SerializeField] private CuttingRecipeSO[] cuttingRecipeArray; // Teoricamente es un mapa. 
     /*
      * Hay 2 situaciones que contemplar
      * 1 - Al interactuar, funciona como Clear Counter: podemos depositar el item o sacarlo de ahi
@@ -22,10 +23,17 @@ public class CuttingCounter : ClearCounter
             /* Faltaria loa logica para saber si ese item lo puedo cortar en pedacitos
              * Para ello, es necesario destruir el objeto que se encuentra sobre la mesa y crear otro nuevo, la version "Sliced" o rebanado
              */
-            kitchenObject.DestroySelf();
-            Transform slicedKitchenObject = Instantiate(slice.GetKitchenObjectSO().GetPrefab());
-            slicedKitchenObject.GetComponent<KitchenObject>().SetNewParent(this);
-            OnCuttingActionTriggered?.Invoke(this, EventArgs.Empty);
+            try
+            {
+                KitchenObjectSO koso = kitchenObject.GetKitchenObjectSO();
+                CuttingRecipeSO target = cuttingRecipeArray.First<CuttingRecipeSO>(recipe => recipe.GetKitchenObjectSOInput() == koso);
+                kitchenObject.DestroySelf();
+                KitchenObject.SpawnKitchenObject(target.GetKitchenObjectSOOutput(), this);
+                OnCuttingActionTriggered?.Invoke(this, EventArgs.Empty);
+            }catch (Exception ex)
+            {
+                Debug.Log("Can't cut that object");
+            }
         }
     }
 

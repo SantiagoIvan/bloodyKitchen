@@ -379,7 +379,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spawnPoint: {fileID: 2992406262155005678}
-  gameInput: {fileID: 0}
+  cuttingRecipeArray:
+  - {fileID: 11400000, guid: 7e6fe64c75e5abd4ea90b73e6e8b112e, type: 2}
+  - {fileID: 11400000, guid: a18a0136ba406c844bc7b534ed8f2193, type: 2}
+  - {fileID: 11400000, guid: ac150d1a5994d5f429b76caccf432967, type: 2}
 --- !u!4 &8125449683695570310 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5126256218508664915, guid: d2366691618de0c408e644624e156567,
