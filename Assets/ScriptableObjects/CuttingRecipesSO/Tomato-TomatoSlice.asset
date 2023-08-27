@@ -15,3 +15,4 @@ MonoBehaviour:
   kitchenObjectInput: {fileID: 11400000, guid: d21f45f363ac5cd4f8f527fc0ac35139, type: 2}
   kitchenObjectOutput: {fileID: 11400000, guid: 6391504683a87ba4e8529043c6e3dae4,
     type: 2}
+  cuttingQuantityLimit: 3

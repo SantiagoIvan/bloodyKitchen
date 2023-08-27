@@ -10,7 +10,9 @@ public class CuttingRecipeSO : ScriptableObject
 {
     [SerializeField] private KitchenObjectSO kitchenObjectInput;
     [SerializeField] private KitchenObjectSO kitchenObjectOutput;
+    [SerializeField] private int cuttingQuantityLimit;
 
     public KitchenObjectSO GetKitchenObjectSOInput() { return kitchenObjectInput; }
     public KitchenObjectSO GetKitchenObjectSOOutput() { return kitchenObjectOutput; }
+    public int GetCuttingQuantityLimit() { return cuttingQuantityLimit; }
 }

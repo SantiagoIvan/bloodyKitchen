@@ -30,7 +30,7 @@ public class ClearCounter : BaseCounter
         {
             player.GetKitchenObject().SetNewParent(this);
         }
-        else if (!player.GetKitchenObject() && kitchenObject)
+        else if (!player.GetKitchenObject() && HasKitchenObject())
         {
             // si ya hay un objeto sobre la mesada y el jugador tiene las manos vacías => lo agarra
             kitchenObject.SetNewParent(PlayerController.Instance);
