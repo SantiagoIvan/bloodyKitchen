@@ -18,6 +18,12 @@ public class CuttingCounter : BaseCounter
     [SerializeField] private int cuttingProgress = 0;
 
     public EventHandler OnCuttingActionTriggered;
+
+    public EventHandler<OnProgressChangedEventArgs> OnProgressChanged;
+    public class OnProgressChangedEventArgs : EventArgs
+    {
+        public float currentProgress;
+    }
     public override void Use()
     {
         try
@@ -27,11 +33,13 @@ public class CuttingCounter : BaseCounter
                 cuttingProgress++;
                 CuttingRecipeSO target = GetOutputRecipe();
                 OnCuttingActionTriggered?.Invoke(this, EventArgs.Empty);
-                if(cuttingProgress == target.GetCuttingQuantityLimit())
+                OnProgressChanged?.Invoke(this, new OnProgressChangedEventArgs{ currentProgress = (float) cuttingProgress / (float) target.GetCuttingQuantityLimit() });
+                if(cuttingProgress >= target.GetCuttingQuantityLimit())
                 {
                     kitchenObject.DestroySelf();
                     KitchenObject.SpawnKitchenObject(target.GetKitchenObjectSOOutput(), this);
                     cuttingProgress = 0;
+                    OnProgressChanged?.Invoke(this, new OnProgressChangedEventArgs{ currentProgress = (float) cuttingProgress });
                 }
                 
             }
@@ -48,6 +56,7 @@ public class CuttingCounter : BaseCounter
         {
             player.GetKitchenObject().SetNewParent(this);
             cuttingProgress = 0; // si cambio de objeto, quiero que se resetee el contador
+            OnProgressChanged?.Invoke(this, new OnProgressChangedEventArgs{ currentProgress = cuttingProgress});
         }
         else if (!player.GetKitchenObject() && HasKitchenObject())
         {
