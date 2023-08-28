@@ -71,7 +71,6 @@ public class GameInput : MonoBehaviour
 
     private void UseObject_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
     {
-        Debug.Log("event triggered");
         OnUseObjectAction?.Invoke(this, EventArgs.Empty);
     }
 
