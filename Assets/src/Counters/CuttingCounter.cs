@@ -66,9 +66,8 @@ public class CuttingCounter : BaseCounter
         else
         {
             Debug.Log("Can't interact with this!!!");
+        }
     }
-    
-}
 
     private CuttingRecipeSO GetOutputRecipe()
     {

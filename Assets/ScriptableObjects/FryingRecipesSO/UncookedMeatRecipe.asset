@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ef0cd473155ccfa4f9e8498596076391, type: 3}
+  m_Name: UncookedMeatRecipe
+  m_EditorClassIdentifier: 
+  kitchenObjectInput: {fileID: 11400000, guid: 5f3c0fe85e0e63d408a9212ea6adc3bc, type: 2}
+  kitchenObjectOutput: {fileID: 11400000, guid: 022373b0a5b64ff4797fd5efeecd482c,
+    type: 2}
+  transitionTime: 2
