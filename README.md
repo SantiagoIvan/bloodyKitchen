@@ -20,5 +20,6 @@ Hay diferentes tipos de mesadas con los que se pueden interactuar
 - Stove Counter: Es el hornito con la hornalla y la sartén, donde podes apoyar algo y se pone a cocinar.
 - Container Counter: Es un spawn de cualquiera de los ingredientes
 - Thrash Counter: tachito de basura para tirar cosas.
+- Plate Counter: mesada que spawnea platos
 
   
