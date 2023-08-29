@@ -16,7 +16,7 @@ Los platos a preparas son hamburguesas y los ingredientes disponibles son:
 
 ### Mesadas
 Hay diferentes tipos de mesadas con los que se pueden interactuar
-- Clear Counter: mesada sin nada, sirve para apoyar algo y liberarte las manos para poder hacer otras tareas
+- Clear Counter: mesada sin nada, sirve para apoyar algo y liberarte las manos para poder hacer otras tareas. Bueno tambien sirve para apoyar los platos y armarlos.
 - Stove Counter: Es el hornito con la hornalla y la sartén, donde podes apoyar algo y se pone a cocinar.
 - Container Counter: Es un spawn de cualquiera de los ingredientes
 - Thrash Counter: tachito de basura para tirar cosas.
