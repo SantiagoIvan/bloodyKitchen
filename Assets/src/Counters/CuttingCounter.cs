@@ -20,6 +20,7 @@ public class CuttingCounter : BaseCounter
     public EventHandler OnCuttingActionTriggered;
 
     public EventHandler<OnProgressChangedEventArgs> OnProgressChanged;
+    //public EventHandler OnProgressBarCompleted;
     public class OnProgressChangedEventArgs : EventArgs
     {
         public float currentProgress;
@@ -28,10 +29,10 @@ public class CuttingCounter : BaseCounter
     {
         try
         {
-            if (HasKitchenObject() && HasOutputRecipe(kitchenObject.GetKitchenObjectSO())) // verifico esto de nuevo porque un objeto al ser cortado se convierte en otro, y este está sobre la mesada asi que podría apretar la tecla "Use" de nuevo
+            if (HasKitchenObject() && HasRecipe(kitchenObject.GetKitchenObjectSO())) // verifico esto de nuevo porque un objeto al ser cortado se convierte en otro, y este está sobre la mesada asi que podría apretar la tecla "Use" de nuevo
             {
                 cuttingProgress++;
-                CuttingRecipeSO target = GetOutputRecipe();
+                CuttingRecipeSO target = GetRecipe();
                 OnCuttingActionTriggered?.Invoke(this, EventArgs.Empty);
                 OnProgressChanged?.Invoke(this, new OnProgressChangedEventArgs{ currentProgress = (float) cuttingProgress / (float) target.GetCuttingQuantityLimit() });
                 if(cuttingProgress >= target.GetCuttingQuantityLimit())
@@ -40,6 +41,7 @@ public class CuttingCounter : BaseCounter
                     KitchenObject.SpawnKitchenObject(target.GetKitchenObjectSOOutput(), this);
                     cuttingProgress = 0;
                     OnProgressChanged?.Invoke(this, new OnProgressChangedEventArgs{ currentProgress = (float) cuttingProgress });
+                    //OnProgressBarCompleted?.Invoke(this, EventArgs.Empty);
                 }
                 
             }
@@ -52,7 +54,7 @@ public class CuttingCounter : BaseCounter
     {
         // Si no hay nada sobre la mesa && el jugador tiene algo en la mano && este objeto es "cortable" => lo deposita.
         PlayerController player = PlayerController.Instance;
-        if (player.GetKitchenObject() && !HasKitchenObject() && HasOutputRecipe(player.GetKitchenObject().GetKitchenObjectSO()))
+        if (player.GetKitchenObject() && !HasKitchenObject() && HasRecipe(player.GetKitchenObject().GetKitchenObjectSO()))
         {
             player.GetKitchenObject().SetNewParent(this);
             cuttingProgress = 0; // si cambio de objeto, quiero que se resetee el contador
@@ -62,6 +64,7 @@ public class CuttingCounter : BaseCounter
         {
             // si ya hay un objeto sobre la mesada y el jugador tiene las manos vacías => lo agarra
             kitchenObject.SetNewParent(PlayerController.Instance);
+            OnProgressChanged?.Invoke(this, new OnProgressChangedEventArgs { currentProgress = 0f });
         }
         else
         {
@@ -69,12 +72,12 @@ public class CuttingCounter : BaseCounter
         }
     }
 
-    private CuttingRecipeSO GetOutputRecipe()
+    private CuttingRecipeSO GetRecipe()
     {
         KitchenObjectSO koso = kitchenObject.GetKitchenObjectSO();
         return cuttingRecipeArray.First<CuttingRecipeSO>(recipe => recipe.GetKitchenObjectSOInput() == koso);
     }
-    private bool HasOutputRecipe(KitchenObjectSO koso)
+    private bool HasRecipe(KitchenObjectSO koso)
     {
         return cuttingRecipeArray.AsQueryable<CuttingRecipeSO>().Any(recipe => recipe.GetKitchenObjectSOInput() == koso);
     }

@@ -9,7 +9,6 @@ public class ProgressBarUI : MonoBehaviour
 {
     [SerializeField] private Image progressBarImg;
     [SerializeField] private CuttingCounter cuttingCounter;
-
     private void Start()
     {
         cuttingCounter.OnProgressChanged += CuttingCounter_OnProgressChanged;

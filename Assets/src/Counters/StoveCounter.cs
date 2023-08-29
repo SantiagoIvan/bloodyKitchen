@@ -11,16 +11,39 @@ using static CuttingCounter;
  * Es la misma idea que la Cutting Counter, tengo una abstracción que almacena, como el registro de un mapa, el inpuit y su output correspondiente.
  */
 
-// TODO REFACTOR PORQUE CUTTING COUNTER Y STOVE COUNTER FUNCIONAN PRACTICAMENTE IGUAL. Template method tal vez funcione. Que ambos hereden de una clase UtilityCounter
 public class StoveCounter : BaseCounter
 {
-    [SerializeField] private float cookTimer;
+    //private Enum State
+    //{
+    //    IDLE,
+    //    FRYING
+    //}
+
+    [SerializeField] private float cookTimer = 0;
     [SerializeField] private FryingRecipeSO[] fryingRecipes;
+
+    private void Update()
+    {
+        if (HasKitchenObject() && HasRecipe(GetKitchenObject().GetKitchenObjectSO()))
+        {
+            cookTimer += Time.deltaTime;
+            Debug.Log(cookTimer);
+            if(cookTimer >= GetRecipe().GetTransitionTime())
+            {
+                cookTimer = 0;
+                Fry();
+            }
+        }
+    }
+    /* Coroutines: te permite ejecutar una función y retrasar su ejecución cuanto quisieras. Se puede pausar y retomar su ejecución en el siguiente frame manteniendo los valores de las variables.
+     Es como si tuvieras un cron ejecutandose a la par, otro thread.
+    Para el tema del timer, se puede solucionar con coroutines o con timers con un float.
+    */
 
     public override void Interact()
     {
         PlayerController player = PlayerController.Instance;
-        if (player.GetKitchenObject() && !HasKitchenObject() && HasOutputRecipe(player.GetKitchenObject().GetKitchenObjectSO()))
+        if (player.GetKitchenObject() && !HasKitchenObject() && HasRecipe(player.GetKitchenObject().GetKitchenObjectSO()))
         {
             player.GetKitchenObject().SetNewParent(this);
         }
@@ -33,13 +56,13 @@ public class StoveCounter : BaseCounter
             Debug.Log("Can't interact with this!!!");
         }
     }
-    public override void Use()
+    public void Fry()
     {
         try
         {
-            if(HasKitchenObject() && HasOutputRecipe(kitchenObject.GetKitchenObjectSO()))
+            if(HasKitchenObject() && HasRecipe(kitchenObject.GetKitchenObjectSO()))
             {
-                FryingRecipeSO target = fryingRecipes.First<FryingRecipeSO>(recipe => recipe.GetKitchenObjectSOInput() == kitchenObject.GetKitchenObjectSO());
+                FryingRecipeSO target = GetRecipe();
                 GetKitchenObject().DestroySelf();
                 ClearKitchenObject();
                 KitchenObject.SpawnKitchenObject(target.GetKitchenObjectSOOutput(), this);
@@ -50,13 +73,19 @@ public class StoveCounter : BaseCounter
         }
     }
 
-    private FryingRecipeSO GetOutputRecipe()
+    private FryingRecipeSO GetRecipe()
     {
         KitchenObjectSO koso = kitchenObject.GetKitchenObjectSO();
-        return fryingRecipes.First<FryingRecipeSO>(recipe => recipe.GetKitchenObjectSOInput() == koso);
+        if (HasRecipe(koso))
+        {
+            return fryingRecipes.First<FryingRecipeSO>(recipe => recipe.GetKitchenObjectSOInput() == koso);
+            
+        }else return null;
     }
-    private bool HasOutputRecipe(KitchenObjectSO koso)
+    private bool HasRecipe(KitchenObjectSO koso)
     {
         return fryingRecipes.AsQueryable<FryingRecipeSO>().Any(recipe => recipe.GetKitchenObjectSOInput() == koso);
     }
+
+    
 }
