@@ -30,7 +30,6 @@ public class PlateCounterVisual : MonoBehaviour
 
     private void PlateCounter_OnPlateTaken(object sender, EventArgs e)
     {
-        Debug.Log("destroying");
         GameObject plate = plates[plates.Count - 1];
         plates.Remove(plate);
         Destroy(plate);

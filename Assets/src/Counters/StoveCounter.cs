@@ -13,27 +13,64 @@ using static CuttingCounter;
 
 public class StoveCounter : BaseCounter
 {
-    //private Enum State
-    //{
-    //    IDLE,
-    //    FRYING
-    //}
+    public enum State
+    {
+        IDLE,
+        FRYING,
+        FRIED,
+        BURNED
+    }
+    public EventHandler<OnStateChangedEventArgs> OnStateChanged;
+    public class OnStateChangedEventArgs : EventArgs
+    {
+        public State state;
+    }
 
-    [SerializeField] private float cookTimer = 0;
+    [SerializeField] private float fryingTimer = 0;
     [SerializeField] private FryingRecipeSO[] fryingRecipes;
+    private FryingRecipeSO currentRecipe;
+    private State currentState;
 
+
+    private void Start()
+    {
+        currentState = State.IDLE;
+    }
+
+    /* TODO separar esta logica de estados en diferentes clases, además puedo agregar efectos y sonidos en cada estado, si hago todo aca es un quilombo ademas de poco cohesivo. */
     private void Update()
     {
-        if (HasKitchenObject() && HasRecipe(GetKitchenObject().GetKitchenObjectSO()))
+        switch (currentState)
         {
-            cookTimer += Time.deltaTime;
-            Debug.Log(cookTimer);
-            if(cookTimer >= GetRecipe().GetTransitionTime())
-            {
-                cookTimer = 0;
-                Fry();
-            }
+            case State.IDLE:
+                break;
+            case State.FRYING:
+                fryingTimer += Time.deltaTime;
+                if(fryingTimer >= currentRecipe.GetTransitionTime())
+                {
+                    // ya ta frito como nuestra economia :'(
+                    fryingTimer = 0;
+                    Fried();
+                    currentRecipe = GetRecipe();
+                    currentState = State.FRIED;
+                    OnStateChanged?.Invoke(this, new OnStateChangedEventArgs { state = currentState});
+                }
+                break;
+            case State.FRIED:
+                fryingTimer += Time.deltaTime;
+                if (fryingTimer >= currentRecipe.GetTransitionTime())
+                {
+                    // se quemó
+                    fryingTimer = 0;
+                    Fried();
+                    currentState = State.BURNED;
+                    OnStateChanged?.Invoke(this, new OnStateChangedEventArgs { state = currentState });
+                }
+                break;
+            case State.BURNED:
+                break;
         }
+        
     }
     /* Coroutines: te permite ejecutar una función y retrasar su ejecución cuanto quisieras. Se puede pausar y retomar su ejecución en el siguiente frame manteniendo los valores de las variables.
      Es como si tuvieras un cron ejecutandose a la par, otro thread.
@@ -46,28 +83,33 @@ public class StoveCounter : BaseCounter
         if (player.GetKitchenObject() && !HasKitchenObject() && HasRecipe(player.GetKitchenObject().GetKitchenObjectSO()))
         {
             player.GetKitchenObject().SetNewParent(this);
+            currentRecipe = GetRecipe();
+            // Al poner algo, se cambia el estado de la cocina y se dispara el evento
+            currentState = State.FRYING;
+            OnStateChanged?.Invoke(this, new OnStateChangedEventArgs { state = currentState });
+
         }
         else if (!player.GetKitchenObject() && HasKitchenObject())
         {
             kitchenObject.SetNewParent(PlayerController.Instance);
+            currentState = State.IDLE;
+            OnStateChanged?.Invoke(this, new OnStateChangedEventArgs { state = currentState });
         }
         else
         {
             Debug.Log("Can't interact with this!!!");
         }
     }
-    public void Fry()
+    public void Fried()
     {
         try
         {
-            if(HasKitchenObject() && HasRecipe(kitchenObject.GetKitchenObjectSO()))
-            {
-                FryingRecipeSO target = GetRecipe();
-                GetKitchenObject().DestroySelf();
-                ClearKitchenObject();
-                KitchenObject.SpawnKitchenObject(target.GetKitchenObjectSOOutput(), this);
-            }
-        } catch(Exception e)
+            GetKitchenObject().DestroySelf();
+            ClearKitchenObject();
+            KitchenObject.SpawnKitchenObject(currentRecipe.GetKitchenObjectSOOutput(), this);
+
+        }
+        catch (Exception e)
         {
             Debug.LogError("Error cooking: " + e.Message);
         }
@@ -82,9 +124,9 @@ public class StoveCounter : BaseCounter
             
         }else return null;
     }
-    private bool HasRecipe(KitchenObjectSO koso)
+    private bool HasRecipe(KitchenObjectSO kosoInput)
     {
-        return fryingRecipes.AsQueryable<FryingRecipeSO>().Any(recipe => recipe.GetKitchenObjectSOInput() == koso);
+        return fryingRecipes.AsQueryable<FryingRecipeSO>().Any(recipe => recipe.GetKitchenObjectSOInput() == kosoInput);
     }
 
     

@@ -130,7 +130,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spawnPoint: {fileID: 802862170230234762}
-  cookTimer: 0
+  fryingTimer: 0
   fryingRecipes:
   - {fileID: 11400000, guid: 818542606c87d2d42923cded4d6da04f, type: 2}
   - {fileID: 11400000, guid: 0cc701497e4fb804d8d5f3f3e7bbfaaa, type: 2}
@@ -197,6 +197,26 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5220305274835918568, guid: 93af8b85a17635f40a5b76ed82a86c18,
+        type: 3}
+      propertyPath: ShapeModule.type
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 5220305274835918568, guid: 93af8b85a17635f40a5b76ed82a86c18,
+        type: 3}
+      propertyPath: ShapeModule.enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5220305274835918568, guid: 93af8b85a17635f40a5b76ed82a86c18,
+        type: 3}
+      propertyPath: ShapeModule.radiusThickness
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5220305274835918568, guid: 93af8b85a17635f40a5b76ed82a86c18,
+        type: 3}
+      propertyPath: EmissionModule.rateOverTime.scalar
+      value: 50
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -206,6 +226,12 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 1779023839957754594}
   m_SourcePrefab: {fileID: 100100000, guid: 93af8b85a17635f40a5b76ed82a86c18, type: 3}
+--- !u!1 &2086632868762401634 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 17251720544094567, guid: 93af8b85a17635f40a5b76ed82a86c18,
+    type: 3}
+  m_PrefabInstance: {fileID: 2074048163323785733}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &2556229118565439150 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4589716710238282923, guid: 93af8b85a17635f40a5b76ed82a86c18,
@@ -230,6 +256,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7bade5de1474b542a09ffc8ea8606b3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  stoveOnVisualObject: {fileID: 2086632868762401634}
+  particleSystemObject: {fileID: 6105262810634546411}
+  stoveCounter: {fileID: 1579862522468409846}
+--- !u!1 &6105262810634546411 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5220305274835918574, guid: 93af8b85a17635f40a5b76ed82a86c18,
+    type: 3}
+  m_PrefabInstance: {fileID: 2074048163323785733}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &7153523507676898716
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -333,6 +368,46 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5220305274835918568, guid: 93af8b85a17635f40a5b76ed82a86c18,
+        type: 3}
+      propertyPath: useUnscaledTime
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5220305274835918568, guid: 93af8b85a17635f40a5b76ed82a86c18,
+        type: 3}
+      propertyPath: ShapeModule.type
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5220305274835918568, guid: 93af8b85a17635f40a5b76ed82a86c18,
+        type: 3}
+      propertyPath: ShapeModule.radiusThickness
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5220305274835918568, guid: 93af8b85a17635f40a5b76ed82a86c18,
+        type: 3}
+      propertyPath: EmissionModule.rateOverTime.scalar
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 5220305274835918568, guid: 93af8b85a17635f40a5b76ed82a86c18,
+        type: 3}
+      propertyPath: EmissionModule.rateOverTime.maxCurve.m_Curve.Array.data[0].time
+      value: 0.037498474
+      objectReference: {fileID: 0}
+    - target: {fileID: 5220305274835918568, guid: 93af8b85a17635f40a5b76ed82a86c18,
+        type: 3}
+      propertyPath: EmissionModule.rateOverTime.maxCurve.m_Curve.Array.data[1].time
+      value: 0.9375
+      objectReference: {fileID: 0}
+    - target: {fileID: 5220305274835918568, guid: 93af8b85a17635f40a5b76ed82a86c18,
+        type: 3}
+      propertyPath: EmissionModule.rateOverTime.maxCurve.m_Curve.Array.data[0].value
+      value: 0.79716873
+      objectReference: {fileID: 0}
+    - target: {fileID: 5220305274835918568, guid: 93af8b85a17635f40a5b76ed82a86c18,
+        type: 3}
+      propertyPath: EmissionModule.rateOverTime.maxCurve.m_Curve.Array.data[1].value
+      value: 0.76651
+      objectReference: {fileID: 0}
     - target: {fileID: 5220305274835918574, guid: 93af8b85a17635f40a5b76ed82a86c18,
         type: 3}
       propertyPath: m_IsActive
@@ -344,7 +419,9 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 17251720544094567, guid: 93af8b85a17635f40a5b76ed82a86c18, type: 3}
+    - {fileID: 5220305274835918574, guid: 93af8b85a17635f40a5b76ed82a86c18, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 4589716710238282922, guid: 93af8b85a17635f40a5b76ed82a86c18,
