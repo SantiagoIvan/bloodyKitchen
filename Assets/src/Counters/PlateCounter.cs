@@ -16,8 +16,8 @@ public class PlateCounter : BaseCounter
     private float timer;
     private float spawnTime = 1f; // en segundos
 
-    public EventHandler OnPlateSpawned;
-    public EventHandler OnPlateTaken;
+    public event EventHandler OnPlateSpawned;
+    public event EventHandler OnPlateTaken;
 
 
     private void Update()

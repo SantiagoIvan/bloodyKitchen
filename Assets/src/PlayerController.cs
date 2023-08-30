@@ -34,7 +34,7 @@ public class PlayerController : MonoBehaviour, IKitchenObjectParent
      * La contra? que es viable en un contexto asi, mapa pequeño, no nos importa el consumo de memoria en este caso.
      * Si necesito pasar datos cuando disparo el evento, lo hago con el generic ese y con la clase que tiene los datos asociados.
     */
-    public EventHandler OnCuttingActionTriggered;
+    public event EventHandler OnCuttingActionTriggered;
     public event EventHandler<OnSelectedCounterChangedEventArgs> OnSelectedCounterChanged;
     public class OnSelectedCounterChangedEventArgs : EventArgs
     {

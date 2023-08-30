@@ -11,8 +11,9 @@ using static CuttingCounter;
  * Es la misma idea que la Cutting Counter, tengo una abstracción que almacena, como el registro de un mapa, el inpuit y su output correspondiente.
  */
 
-public class StoveCounter : BaseCounter
+public class StoveCounter : BaseCounter, IObjectWithProgress
 {
+    public event EventHandler<IObjectWithProgress.OnProgressChangedEventArgs> OnProgressChanged;
     public enum State
     {
         IDLE,
@@ -20,7 +21,7 @@ public class StoveCounter : BaseCounter
         FRIED,
         BURNED
     }
-    public EventHandler<OnStateChangedEventArgs> OnStateChanged;
+    public event EventHandler<OnStateChangedEventArgs> OnStateChanged;
     public class OnStateChangedEventArgs : EventArgs
     {
         public State state;
@@ -46,6 +47,7 @@ public class StoveCounter : BaseCounter
                 break;
             case State.FRYING:
                 fryingTimer += Time.deltaTime;
+                OnProgressChanged?.Invoke(this, new IObjectWithProgress.OnProgressChangedEventArgs { currentProgress = fryingTimer / currentRecipe.GetTransitionTime() });
                 if(fryingTimer >= currentRecipe.GetTransitionTime())
                 {
                     // ya ta frito como nuestra economia :'(
@@ -58,6 +60,7 @@ public class StoveCounter : BaseCounter
                 break;
             case State.FRIED:
                 fryingTimer += Time.deltaTime;
+                OnProgressChanged?.Invoke(this, new IObjectWithProgress.OnProgressChangedEventArgs { currentProgress = fryingTimer / currentRecipe.GetTransitionTime() });
                 if (fryingTimer >= currentRecipe.GetTransitionTime())
                 {
                     // se quemó
@@ -93,6 +96,8 @@ public class StoveCounter : BaseCounter
         {
             kitchenObject.SetNewParent(PlayerController.Instance);
             currentState = State.IDLE;
+            fryingTimer = 0f;
+            OnProgressChanged?.Invoke(this, new IObjectWithProgress.OnProgressChangedEventArgs { currentProgress = fryingTimer / currentRecipe.GetTransitionTime() });
             OnStateChanged?.Invoke(this, new OnStateChangedEventArgs { state = currentState });
         }
         else

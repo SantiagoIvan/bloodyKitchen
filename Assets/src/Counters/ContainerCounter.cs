@@ -8,7 +8,7 @@ using UnityEngine;
 public class ContainerCounter : BaseCounter
 {
     [SerializeField] private KitchenObjectSO kitchenObjectSO;
-    public EventHandler OnPlayerGrabbedUp;
+    public event EventHandler OnPlayerGrabbedUp;
 
     /* Por lo que creo yo, a  la primera interacción, si el jugador tiene las manos vacías, debería spawnearle en la mano el item que dropee esta mesada.
      */

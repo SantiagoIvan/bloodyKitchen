@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class CuttingCounter : BaseCounter
+public class CuttingCounter : BaseCounter, IObjectWithProgress
 {
     [SerializeField] private CuttingRecipeSO[] cuttingRecipeArray; // Teoricamente es un mapa, porque cada uno de estos items tiene un input y un output. 
     /*
@@ -17,14 +17,10 @@ public class CuttingCounter : BaseCounter
      */
     [SerializeField] private int cuttingProgress = 0;
 
-    public EventHandler OnCuttingActionTriggered;
+    public event EventHandler OnCuttingActionTriggered;
 
-    public EventHandler<OnProgressChangedEventArgs> OnProgressChanged;
-    //public EventHandler OnProgressBarCompleted;
-    public class OnProgressChangedEventArgs : EventArgs
-    {
-        public float currentProgress;
-    }
+    public event EventHandler<IObjectWithProgress.OnProgressChangedEventArgs> OnProgressChanged; // Esto es porque esa clase correspondiente a los Args, esta dentro de la Interfaz. Si yo creo otra igual aca adentro, va a ser diferente.
+
     public override void Use()
     {
         try
@@ -34,14 +30,13 @@ public class CuttingCounter : BaseCounter
                 cuttingProgress++;
                 CuttingRecipeSO target = GetRecipe();
                 OnCuttingActionTriggered?.Invoke(this, EventArgs.Empty);
-                OnProgressChanged?.Invoke(this, new OnProgressChangedEventArgs{ currentProgress = (float) cuttingProgress / (float) target.GetCuttingQuantityLimit() });
+                OnProgressChanged?.Invoke(this, new IObjectWithProgress.OnProgressChangedEventArgs { currentProgress = (float) cuttingProgress / (float) target.GetCuttingQuantityLimit() });
                 if(cuttingProgress >= target.GetCuttingQuantityLimit())
                 {
                     kitchenObject.DestroySelf();
                     KitchenObject.SpawnKitchenObject(target.GetKitchenObjectSOOutput(), this);
                     cuttingProgress = 0;
-                    OnProgressChanged?.Invoke(this, new OnProgressChangedEventArgs{ currentProgress = (float) cuttingProgress });
-                    //OnProgressBarCompleted?.Invoke(this, EventArgs.Empty);
+                    OnProgressChanged?.Invoke(this, new IObjectWithProgress.OnProgressChangedEventArgs { currentProgress = (float) cuttingProgress });
                 }
                 
             }
@@ -58,13 +53,13 @@ public class CuttingCounter : BaseCounter
         {
             player.GetKitchenObject().SetNewParent(this);
             cuttingProgress = 0; // si cambio de objeto, quiero que se resetee el contador
-            OnProgressChanged?.Invoke(this, new OnProgressChangedEventArgs{ currentProgress = cuttingProgress});
+            OnProgressChanged?.Invoke(this, new IObjectWithProgress.OnProgressChangedEventArgs { currentProgress = cuttingProgress});
         }
         else if (!player.GetKitchenObject() && HasKitchenObject())
         {
             // si ya hay un objeto sobre la mesada y el jugador tiene las manos vacías => lo agarra
             kitchenObject.SetNewParent(PlayerController.Instance);
-            OnProgressChanged?.Invoke(this, new OnProgressChangedEventArgs { currentProgress = 0f });
+            OnProgressChanged?.Invoke(this, new IObjectWithProgress.OnProgressChangedEventArgs { currentProgress = 0f });
         }
         else
         {
