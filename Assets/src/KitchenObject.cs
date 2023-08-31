@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -41,5 +42,18 @@ public class KitchenObject : MonoBehaviour
         KitchenObject spawnedObject = spawned.GetComponent<KitchenObject>();
         spawnedObject.SetNewParent(parent);
         return spawnedObject;
+    }
+    public bool TryGetPlate(out PlateKitchenObject plate)
+    {
+        if(this is PlateKitchenObject)
+        {
+            plate = this as PlateKitchenObject; // es un casteo
+            return true;
+        }
+        else
+        {
+            plate = null;
+            return false;
+        }
     }
 }

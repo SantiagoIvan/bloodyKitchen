@@ -5,6 +5,16 @@ using System.Linq;
 using UnityEditor.PackageManager;
 using UnityEngine;
 
+/* El plato es un subtipo de KitchenObject, ya que posee el mismo comportamiento (poder ser agarrado y todo eso) pero además tiene que tener esta logica de poder sumar ingredientes
+ * y además tengo que tener una lista de ingredientes prohibidos para que no todo pueda combinarse (como 2 platos)
+ * Por la logica que segui yo, los ingredientes prohibidos son
+ * - Plato
+ * - Lechuga sin cortar
+ * - Queso sin cortar
+ * - Tomate sin cortar
+ * - Carne cruda
+ * - Carne quemada
+ */
 public class PlateKitchenObject : KitchenObject
 {
     [SerializeField] private float offset;
@@ -23,9 +33,9 @@ public class PlateKitchenObject : KitchenObject
         ingredients = new List<KitchenObjectSO>();
         offset = 0.5f;
     }
-    public void AddIngredient(KitchenObjectSO ingredient)
+    public void TryAddIngredient(KitchenObjectSO ingredient)
     {
-        if(!forbiddenIngredients.Any<KitchenObjectSO>( koso => koso == ingredient))
+        if(!forbiddenIngredients.Contains(ingredient))
         {
             Transform spawned = Instantiate(ingredient.GetPrefab(), ingredientsSpawn);
             spawned.localPosition = new Vector3(0, offset * ingredients.Count, 0);

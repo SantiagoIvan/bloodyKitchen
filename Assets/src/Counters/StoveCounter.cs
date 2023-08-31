@@ -11,6 +11,9 @@ using static CuttingCounter;
  * Es la misma idea que la Cutting Counter, tengo una abstracción que almacena, como el registro de un mapa, el inpuit y su output correspondiente.
  */
 
+
+/* Clear, Cutting && Stove Counters son mesadas donde se pueden combinar objetos al interactuar, si yo tengo un tomate cortado, puedo llevar el plato y combinarlo con esos tomates
+*/
 public class StoveCounter : BaseCounter, IObjectWithProgress
 {
     public event EventHandler<IObjectWithProgress.OnProgressChangedEventArgs> OnProgressChanged;
@@ -100,9 +103,18 @@ public class StoveCounter : BaseCounter, IObjectWithProgress
             OnProgressChanged?.Invoke(this, new IObjectWithProgress.OnProgressChangedEventArgs { currentProgress = fryingTimer / currentRecipe.GetTransitionTime() });
             OnStateChanged?.Invoke(this, new OnStateChangedEventArgs { state = currentState });
         }
-        else
+        else if (HasKitchenObject() && player.HasKitchenObject())
         {
-            Debug.Log("Can't interact with this!!!");
+            if (player.GetKitchenObject().TryGetPlate(out PlateKitchenObject plate))
+            {
+                // Intento combinarlo con lo que hay sobre la mesa
+                plate.TryAddIngredient(kitchenObject.GetKitchenObjectSO());
+                kitchenObject.DestroySelf();
+                currentState = State.IDLE;
+                fryingTimer = 0f;
+                OnProgressChanged?.Invoke(this, new IObjectWithProgress.OnProgressChangedEventArgs { currentProgress = fryingTimer / currentRecipe.GetTransitionTime() });
+                OnStateChanged?.Invoke(this, new OnStateChangedEventArgs { state = State.IDLE });
+            }
         }
     }
     public void Fried()

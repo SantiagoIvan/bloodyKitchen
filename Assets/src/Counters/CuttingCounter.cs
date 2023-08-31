@@ -15,6 +15,9 @@ public class CuttingCounter : BaseCounter, IObjectWithProgress
      * Como al interactuar, funciona igual que el clear counter, lo hago heredar de éste
      * Cambia la segunda situacion. Para ello, tengo que agregar un nuevo input
      */
+
+    /* Clear, Cutting && Stove Counters son mesadas donde se pueden combinar objetos al interactuar, si yo tengo un tomate cortado, puedo llevar el plato y combinarlo con esos tomates
+     */
     [SerializeField] private int cuttingProgress = 0;
 
     public event EventHandler OnCuttingActionTriggered;
@@ -47,23 +50,33 @@ public class CuttingCounter : BaseCounter, IObjectWithProgress
     }
     public override void Interact()
     {
-        // Si no hay nada sobre la mesa && el jugador tiene algo en la mano && este objeto es "cortable" => lo deposita.
-        PlayerController player = PlayerController.Instance;
-        if (player.GetKitchenObject() && !HasKitchenObject() && HasRecipe(player.GetKitchenObject().GetKitchenObjectSO()))
+        try
         {
-            player.GetKitchenObject().SetNewParent(this);
-            cuttingProgress = 0; // si cambio de objeto, quiero que se resetee el contador
-            OnProgressChanged?.Invoke(this, new IObjectWithProgress.OnProgressChangedEventArgs { currentProgress = cuttingProgress});
-        }
-        else if (!player.GetKitchenObject() && HasKitchenObject())
-        {
-            // si ya hay un objeto sobre la mesada y el jugador tiene las manos vacías => lo agarra
-            kitchenObject.SetNewParent(PlayerController.Instance);
-            OnProgressChanged?.Invoke(this, new IObjectWithProgress.OnProgressChangedEventArgs { currentProgress = 0f });
-        }
-        else
-        {
-            Debug.Log("Can't interact with this!!!");
+            // Si no hay nada sobre la mesa && el jugador tiene algo en la mano && este objeto es "cortable" => lo deposita.
+            PlayerController player = PlayerController.Instance;
+            if (player.GetKitchenObject() && !HasKitchenObject() && HasRecipe(player.GetKitchenObject().GetKitchenObjectSO()))
+            {
+                player.GetKitchenObject().SetNewParent(this);
+                cuttingProgress = 0; // si cambio de objeto, quiero que se resetee el contador
+                OnProgressChanged?.Invoke(this, new IObjectWithProgress.OnProgressChangedEventArgs { currentProgress = cuttingProgress});
+            }
+            else if (!player.GetKitchenObject() && HasKitchenObject())
+            {
+                // si ya hay un objeto sobre la mesada y el jugador tiene las manos vacías => lo agarra
+                kitchenObject.SetNewParent(PlayerController.Instance);
+                OnProgressChanged?.Invoke(this, new IObjectWithProgress.OnProgressChangedEventArgs { currentProgress = 0f });
+            }
+            else if (HasKitchenObject() && player.HasKitchenObject())
+            {
+                if (player.GetKitchenObject().TryGetPlate(out PlateKitchenObject plate))
+                {
+                    // Intento combinarlo con lo que hay sobre la mesa
+                    plate.TryAddIngredient(kitchenObject.GetKitchenObjectSO());
+                    kitchenObject.DestroySelf();
+                }
+            }
+        }catch (Exception e){
+            Debug.LogException(e);
         }
     }
 

@@ -22,6 +22,11 @@ public class ClearCounter : BaseCounter
 
     /* Para el caso de las mesadas, lo que voy a querer hacer es dropear objetos en ellas. Lo que sea que tenga el jugador en la mano
      */
+
+
+
+    /* Clear, Cutting && Stove Counters son mesadas donde se pueden combinar objetos al interactuar, si yo tengo un tomate cortado, puedo llevar el plato y combinarlo con esos tomates
+     */
     public override void Interact()
     {
         try
@@ -43,19 +48,17 @@ public class ClearCounter : BaseCounter
                  * Y que pueda encimarlos cumpliendo cierta regla. Por ejemplo, un pan nunca va a estar encima de la lechuga. Hademás hay objetos no combinables, como platos entre si.
                  * Otra cosa que hay que contemplar es el caso inverso: si el plato esta sobre la mesa y yo tengo por ejemplo la hamburguesa, quiero que se puedan combinar
                  */
-            
-                    if(player.GetKitchenObject() is PlateKitchenObject)
+                    PlateKitchenObject plate;
+                    if (player.GetKitchenObject().TryGetPlate(out plate))
                     {
                         // Intento combinarlo con lo que hay sobre la mesa
-                        PlateKitchenObject plate = player.GetKitchenObject() as PlateKitchenObject;
-                        plate.AddIngredient(kitchenObject.GetKitchenObjectSO());
+                        plate.TryAddIngredient(kitchenObject.GetKitchenObjectSO());
                         kitchenObject.DestroySelf();
                     }
-                    else if (GetKitchenObject() is PlateKitchenObject)
+                    else if (GetKitchenObject().TryGetPlate(out  plate))
                     {
                         // Intento combinarlo con lo que tiene el chabon
-                        PlateKitchenObject plate = GetKitchenObject() as PlateKitchenObject;
-                        plate.AddIngredient(player.GetKitchenObject().GetKitchenObjectSO());
+                        plate.TryAddIngredient(player.GetKitchenObject().GetKitchenObjectSO());
                         player.GetKitchenObject().DestroySelf();
                     }
             }
