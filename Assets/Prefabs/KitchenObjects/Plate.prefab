@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2377695037120036945}
-  - component: {fileID: -1740841383494289809}
+  - component: {fileID: 162122486125950631}
   m_Layer: 0
   m_Name: Plate
   m_TagString: Untagged
@@ -31,9 +31,10 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7861894466742661276}
+  - {fileID: 3147229506932547215}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &-1740841383494289809
+--- !u!114 &162122486125950631
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -42,10 +43,49 @@ MonoBehaviour:
   m_GameObject: {fileID: 840081750216911640}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ab7d91157566b564d81d180713fefbb0, type: 3}
+  m_Script: {fileID: 11500000, guid: 1bce58e10f7c8234cab95018025e0a42, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   kitchenObjectSO: {fileID: 11400000, guid: f003216cb9d34e4418c963b688fd5583, type: 2}
+  offset: 0
+  ingredientsSpawn: {fileID: 3147229506932547215}
+  ingredients: []
+  forbiddenIngredients:
+  - {fileID: 11400000, guid: f003216cb9d34e4418c963b688fd5583, type: 2}
+  - {fileID: 11400000, guid: c72f73867f8de3f4d92550dd1fe937ac, type: 2}
+  - {fileID: 11400000, guid: 6d5e3b88776712043bfdaf3956fbf60c, type: 2}
+  - {fileID: 11400000, guid: d21f45f363ac5cd4f8f527fc0ac35139, type: 2}
+--- !u!1 &8639341802983261592
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3147229506932547215}
+  m_Layer: 0
+  m_Name: SpawnPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3147229506932547215
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8639341802983261592}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.043, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2377695037120036945}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &6480961708200732188
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -24,19 +24,45 @@ public class ClearCounter : BaseCounter
      */
     public override void Interact()
     {
-        // Si no hay nada sobre la mesa y el jugador tiene algo en la mano => lo deposita.
-        PlayerController player = PlayerController.Instance;
-        if (player.GetKitchenObject() && !HasKitchenObject())
+        try
         {
-            player.GetKitchenObject().SetNewParent(this);
+            // Si no hay nada sobre la mesa y el jugador tiene algo en la mano => lo deposita.
+            PlayerController player = PlayerController.Instance;
+            if (player.GetKitchenObject() && !HasKitchenObject())
+            {
+                player.GetKitchenObject().SetNewParent(this);
+            }
+            else if (!player.GetKitchenObject() && HasKitchenObject())
+            {
+                // si ya hay un objeto sobre la mesada y el jugador tiene las manos vacías => lo agarra
+                kitchenObject.SetNewParent(PlayerController.Instance);
+            }else if (HasKitchenObject() && player.HasKitchenObject())
+            {
+                /* aca quiero ver si eso que tiene el jugador es un plato, para combinarlo con el objeto que tenga la mesa. Como el plato va a ser un objeto pero con algo de logica extra
+                 * le creamos una clase y que herede de KitchenObjet, asi puede seguir siendo agarrado y además tiene la lógica extra de poder ponerle cosas encima (lista de KitchenObjects)
+                 * Y que pueda encimarlos cumpliendo cierta regla. Por ejemplo, un pan nunca va a estar encima de la lechuga. Hademás hay objetos no combinables, como platos entre si.
+                 * Otra cosa que hay que contemplar es el caso inverso: si el plato esta sobre la mesa y yo tengo por ejemplo la hamburguesa, quiero que se puedan combinar
+                 */
+            
+                    if(player.GetKitchenObject() is PlateKitchenObject)
+                    {
+                        // Intento combinarlo con lo que hay sobre la mesa
+                        PlateKitchenObject plate = player.GetKitchenObject() as PlateKitchenObject;
+                        plate.AddIngredient(kitchenObject.GetKitchenObjectSO());
+                        kitchenObject.DestroySelf();
+                    }
+                    else if (GetKitchenObject() is PlateKitchenObject)
+                    {
+                        // Intento combinarlo con lo que tiene el chabon
+                        PlateKitchenObject plate = GetKitchenObject() as PlateKitchenObject;
+                        plate.AddIngredient(player.GetKitchenObject().GetKitchenObjectSO());
+                        player.GetKitchenObject().DestroySelf();
+                    }
+            }
         }
-        else if (!player.GetKitchenObject() && HasKitchenObject())
+        catch (Exception e)
         {
-            // si ya hay un objeto sobre la mesada y el jugador tiene las manos vacías => lo agarra
-            kitchenObject.SetNewParent(PlayerController.Instance);
-        }else
-        {
-            Debug.Log("Can't interact with this!!!");
+            Debug.LogException(e);
         }
     }
 }
