@@ -17,11 +17,26 @@ using UnityEngine;
  */
 public class PlateKitchenObject : KitchenObject
 {
+    /* TODO si quiero que los ingredientes se puedan repetir y no se cague la parte visual, voy a tener que agregarlos dinamicamente
+    * Para ellos voy a tener que agregar un offset para cada ingrediente, y asi voy a saber cuanto se separan los panes en cada nuevo ingrediente que agrego.
+    * De esta forma voy a poder armar patys con varias hamburguesas
+    * En el tutorial, establece que solo puede haber un paty con esa combinación de ingredientes, donde cada uno tiene una sola ocurrencia
+    * En mi juego, puede pasar cualquier cosa: podes tener 3 fetas de queso si queres, 3 patys.
+    * 
+    * Además, hay un prefab llamado PlateCompleteVisual, en los PrefabVisuals que da el chabon, donde tengo un paty con todos los prefab ingredientes que puede tener dentro.
+    * Su idea es que al armar el plato, spawnee ese paty y vaya activando los prefab de los ingredientes que posee
+    * Mi idea va a ser, al
+    */
     [SerializeField] private float offset;
     [SerializeField] private Transform ingredientsSpawn;
     [SerializeField] private List<KitchenObjectSO> ingredients;
 
     [SerializeField] private List<KitchenObjectSO> forbiddenIngredients;
+    public event EventHandler<OnNewIngredientEventArgs> OnNewIngredient;
+    public class OnNewIngredientEventArgs
+    {
+        public KitchenObjectSO newIngredient;
+    }
     /* Sería una lista de lis tipos de Objetos, no de los objetos en sí.
      * Si los objetos tuvieran stats, hp o atributos propios que valgan la pena, sería una lista de KitchenObjects (representarían a los objetos concretos). Además a partir del kitchenObject puedo obtener
      * el KitchenObjectSO y por ende el prefab y spawnear la parte visual.
@@ -37,13 +52,25 @@ public class PlateKitchenObject : KitchenObject
     {
         if(!forbiddenIngredients.Contains(ingredient))
         {
-            Transform spawned = Instantiate(ingredient.GetPrefab(), ingredientsSpawn);
-            spawned.localPosition = new Vector3(0, offset * ingredients.Count, 0);
+            //Transform spawned = Instantiate(ingredient.GetPrefab(), ingredientsSpawn);
+            //spawned.localPosition = new Vector3(0, offset * ingredients.Count, 0);
+            OnNewIngredient?.Invoke(this, new OnNewIngredientEventArgs { newIngredient = ingredient });
             ingredients.Add(ingredient);
         }
         else
         {
             throw new Exception("Forbidden ingredient!!");
         }
+    }
+    public Transform GetIngredientSpawn() { return ingredientsSpawn; }
+
+    internal int GetIngredientsCount()
+    {
+        return ingredients.Count;
+    }
+
+    internal float GetOffset()
+    {
+        return offset;
     }
 }
