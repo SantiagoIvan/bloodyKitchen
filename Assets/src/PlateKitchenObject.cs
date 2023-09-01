@@ -25,10 +25,8 @@ public class PlateKitchenObject : KitchenObject
     * 
     * Además, hay un prefab llamado PlateCompleteVisual, en los PrefabVisuals que da el chabon, donde tengo un paty con todos los prefab ingredientes que puede tener dentro.
     * Su idea es que al armar el plato, spawnee ese paty y vaya activando los prefab de los ingredientes que posee
-    * Mi idea va a ser, al
+    * Mi idea va a ser, armarlo con cualquier cantidad de cosas.
     */
-    [SerializeField] private float offset;
-    [SerializeField] private Transform ingredientsSpawn;
     [SerializeField] private List<KitchenObjectSO> ingredients;
 
     [SerializeField] private List<KitchenObjectSO> forbiddenIngredients;
@@ -46,14 +44,11 @@ public class PlateKitchenObject : KitchenObject
     private void Awake()
     {
         ingredients = new List<KitchenObjectSO>();
-        offset = 0.5f;
     }
     public void TryAddIngredient(KitchenObjectSO ingredient)
     {
         if(!forbiddenIngredients.Contains(ingredient))
         {
-            //Transform spawned = Instantiate(ingredient.GetPrefab(), ingredientsSpawn);
-            //spawned.localPosition = new Vector3(0, offset * ingredients.Count, 0);
             OnNewIngredient?.Invoke(this, new OnNewIngredientEventArgs { newIngredient = ingredient });
             ingredients.Add(ingredient);
         }
@@ -62,15 +57,6 @@ public class PlateKitchenObject : KitchenObject
             throw new Exception("Forbidden ingredient!!");
         }
     }
-    public Transform GetIngredientSpawn() { return ingredientsSpawn; }
 
-    internal int GetIngredientsCount()
-    {
-        return ingredients.Count;
-    }
-
-    internal float GetOffset()
-    {
-        return offset;
-    }
+    public List<KitchenObjectSO> GetIngredients() { return ingredients; }
 }

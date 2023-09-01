@@ -9,8 +9,10 @@ public class KitchenObjectSO : ScriptableObject
     [SerializeField] private Transform prefab;
     [SerializeField] private Sprite sprite; // el modelo visual que va a renderizar
     [SerializeField] private string objectName;
+    [SerializeField] private float visualOffset;
 
     public Transform GetPrefab() { return prefab; }
     public string GetObjectName() { return objectName; }
     public Sprite GetSprite() { return sprite; }
+    public float GetVisualOffset() { return visualOffset; }
 }
