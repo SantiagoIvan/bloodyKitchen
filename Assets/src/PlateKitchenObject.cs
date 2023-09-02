@@ -49,8 +49,8 @@ public class PlateKitchenObject : KitchenObject
     {
         if(!forbiddenIngredients.Contains(ingredient))
         {
-            OnNewIngredient?.Invoke(this, new OnNewIngredientEventArgs { newIngredient = ingredient });
             ingredients.Add(ingredient);
+            OnNewIngredient?.Invoke(this, new OnNewIngredientEventArgs { newIngredient = ingredient });
         }
         else
         {
