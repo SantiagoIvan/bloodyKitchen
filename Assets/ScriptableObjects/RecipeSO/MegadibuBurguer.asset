@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6af16f23c69c5714daea1186860c52f1, type: 3}
+  m_Name: MegadibuBurguer
+  m_EditorClassIdentifier: 
+  ingredients:
+  - amount: 1
+    typeIngredient: {fileID: 11400000, guid: ba3d82e58614a6c4fab45465b71b495c, type: 2}
+  - amount: 1
+    typeIngredient: {fileID: 11400000, guid: 6391504683a87ba4e8529043c6e3dae4, type: 2}
+  - amount: 3
+    typeIngredient: {fileID: 11400000, guid: 022373b0a5b64ff4797fd5efeecd482c, type: 2}
+  - amount: 3
+    typeIngredient: {fileID: 11400000, guid: ad094f4e2cf4cb645a2ebc1082e35cc9, type: 2}
+  - amount: 1
+    typeIngredient: {fileID: 11400000, guid: 7a592ed3e2def714ebc6c19f030d3e93, type: 2}
+  recipeName: Megadibu Burguer

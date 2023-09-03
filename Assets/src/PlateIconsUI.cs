@@ -20,10 +20,6 @@ public class PlateIconsUI : MonoBehaviour
     {
         // agregar un nuevo icono.
         UpdateVisual();
-        for(int i = 0; i < plateParent.GetIngredients().Count; i++)
-        {
-            Debug.Log(plateParent.GetIngredients()[i].name);
-        }
     }
 
     private void UpdateVisual()
