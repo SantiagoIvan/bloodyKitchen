@@ -41,7 +41,6 @@ public class RecipeSO : ScriptableObject
             {
                 map[koso] += 1;
             }
-            Debug.Log("Ingredient: " + koso.ToString() + value.ToString() + " --- " + map[koso]);
         }
         
         // si tienen la misma cantidad de entradas tanto el diccionario como la lista, y coinciden con los ingredientes y cantidades, es porque es el plato correcto
@@ -67,4 +66,6 @@ public class RecipeSO : ScriptableObject
     {
         return recipeName;
     }
+
+    public List<Ingredient> GetIngredients() { return ingredients; }
 }

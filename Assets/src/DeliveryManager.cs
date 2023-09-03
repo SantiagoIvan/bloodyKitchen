@@ -1,7 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 /* La idea es que este componente tenga la lógica de las ordenes que van haciendo los clientes.
  * El Delivery Counter se debería comunicar con éste para verificar si el plato entregado al ejecutar Interact() se corresponde
@@ -17,17 +19,25 @@ public class DeliveryManager : MonoBehaviour
     private List<RecipeSO> orders;
     [SerializeField] private RecipesListSO recipes;
 
-    [SerializeField] private float spawnTime; // en segundos
+    [SerializeField] private float spawnTime = 1f; // en segundos
     private float currentTime;
-    [SerializeField] private int maxOrders;
-    private int ordersCompleted;
+    [SerializeField] private int maxOrders = 1;
+    private int ordersCompleted = 0;
 
-    private void Start()
+    public event EventHandler<OnOrderSpawnedEventArgs> OnOrderSpawned;
+    public event EventHandler<OnOrderCompletedEventArgs> OnOrderCompleted;
+    public class OnOrderSpawnedEventArgs
+    {
+        public RecipeSO recipe;
+    }
+    public class OnOrderCompletedEventArgs
+    {
+        public RecipeSO recipe;
+    }
+
+    private void Awake()
     {
         orders = new List<RecipeSO>();
-        maxOrders = 4;
-        spawnTime = 1f;
-        ordersCompleted = 0;
     }
 
     private void Update()
@@ -47,6 +57,7 @@ public class DeliveryManager : MonoBehaviour
     {
         RecipeSO newOrder = recipes.GetRandomRecipeSO();
         orders.Add(newOrder);
+        OnOrderSpawned?.Invoke(this, new OnOrderSpawnedEventArgs { recipe = newOrder });
     }
 
     public bool IsPlateCorrect(PlateKitchenObject plate, out string recipeName)
@@ -64,6 +75,10 @@ public class DeliveryManager : MonoBehaviour
     {
         
         ordersCompleted++;
-        orders.Remove(recipes.GetRecipeSOByName(recipeName));
+        RecipeSO target = recipes.GetRecipeSOByName(recipeName);
+        orders.Remove(target);
+        OnOrderCompleted?.Invoke(this, new OnOrderCompletedEventArgs { recipe = target });
     }
+
+    public List<RecipeSO> GetOrders(){ return orders; }
 }
