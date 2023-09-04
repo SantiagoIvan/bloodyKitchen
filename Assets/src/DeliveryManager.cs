@@ -81,7 +81,7 @@ public class DeliveryManager : MonoBehaviour
         orders.Remove(target);
         OnOrderCompleted?.Invoke(this, new OnOrderCompletedEventArgs { recipe = target });
     }
-    public void deliverPlate(PlateKitchenObject plate)
+    public void DeliverPlate(PlateKitchenObject plate)
     {
         if(IsPlateCorrect(plate, out string recipeName)){
             OrderCompleted(recipeName);

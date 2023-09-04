@@ -20,7 +20,10 @@ public class CuttingCounter : BaseCounter, IObjectWithProgress
      */
     [SerializeField] private int cuttingProgress = 0;
 
+    // este evento es para el efecto visual del counter en particular
     public event EventHandler OnCuttingActionTriggered;
+
+    public static event EventHandler OnGlobalCuttingActionTriggered; // para los sonidos
 
     public event EventHandler<IObjectWithProgress.OnProgressChangedEventArgs> OnProgressChanged; // Esto es porque esa clase correspondiente a los Args, esta dentro de la Interfaz. Si yo creo otra igual aca adentro, va a ser diferente.
 
@@ -34,6 +37,7 @@ public class CuttingCounter : BaseCounter, IObjectWithProgress
                 CuttingRecipeSO target = GetRecipe();
                 OnCuttingActionTriggered?.Invoke(this, EventArgs.Empty);
                 OnProgressChanged?.Invoke(this, new IObjectWithProgress.OnProgressChangedEventArgs { currentProgress = (float) cuttingProgress / (float) target.GetCuttingQuantityLimit() });
+                OnGlobalCuttingActionTriggered?.Invoke(this, EventArgs.Empty);
                 if(cuttingProgress >= target.GetCuttingQuantityLimit())
                 {
                     kitchenObject.DestroySelf();
