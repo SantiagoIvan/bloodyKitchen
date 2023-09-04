@@ -23,9 +23,11 @@ public class DeliveryManager : MonoBehaviour
     private float currentTime;
     [SerializeField] private int maxOrders = 1;
     private int ordersCompleted = 0;
+    private int wrongOrdersDelivered = 0;
 
     public event EventHandler<OnOrderSpawnedEventArgs> OnOrderSpawned;
     public event EventHandler<OnOrderCompletedEventArgs> OnOrderCompleted;
+    public event EventHandler OnWrongPlateDelivered;
     public class OnOrderSpawnedEventArgs
     {
         public RecipeSO recipe;
@@ -60,7 +62,7 @@ public class DeliveryManager : MonoBehaviour
         OnOrderSpawned?.Invoke(this, new OnOrderSpawnedEventArgs { recipe = newOrder });
     }
 
-    public bool IsPlateCorrect(PlateKitchenObject plate, out string recipeName)
+    private bool IsPlateCorrect(PlateKitchenObject plate, out string recipeName)
     {
         for (int i = 0; i < orders.Count; i++)
         {
@@ -71,13 +73,26 @@ public class DeliveryManager : MonoBehaviour
         return false;
     }
 
-    public void OrderCompleted(string recipeName)
+    private void OrderCompleted(string recipeName)
     {
         
         ordersCompleted++;
         RecipeSO target = recipes.GetRecipeSOByName(recipeName);
         orders.Remove(target);
         OnOrderCompleted?.Invoke(this, new OnOrderCompletedEventArgs { recipe = target });
+    }
+    public void deliverPlate(PlateKitchenObject plate)
+    {
+        if(IsPlateCorrect(plate, out string recipeName)){
+            OrderCompleted(recipeName);
+            Debug.Log("Plate successfully delivered! " + recipeName);
+        }
+        else
+        {
+            wrongOrdersDelivered++;
+            OnWrongPlateDelivered?.Invoke(this, EventArgs.Empty);
+            Debug.Log("WRONG PLATE!");
+        }
     }
 
     public List<RecipeSO> GetOrders(){ return orders; }

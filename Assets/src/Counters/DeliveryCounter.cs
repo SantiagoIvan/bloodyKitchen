@@ -11,11 +11,10 @@ public class DeliveryCounter : BaseCounter
         PlayerController player = PlayerController.Instance;
         if (player.HasKitchenObject())
         {
-            if(player.GetKitchenObject().TryGetPlate(out PlateKitchenObject plate) && deliveryManager.IsPlateCorrect(plate, out string recipeName))
+            if(player.GetKitchenObject().TryGetPlate(out PlateKitchenObject plate))
             {
+                deliveryManager.deliverPlate(plate);
                 player.GetKitchenObject().DestroySelf();
-                deliveryManager.OrderCompleted(recipeName);
-                Debug.Log("Plate successfully delivered! " + recipeName);
             }
         }
     }
