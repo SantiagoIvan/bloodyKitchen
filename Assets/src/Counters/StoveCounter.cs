@@ -14,8 +14,11 @@ using static CuttingCounter;
 
 /* Clear, Cutting && Stove Counters son mesadas donde se pueden combinar objetos al interactuar, si yo tengo un tomate cortado, puedo llevar el plato y combinarlo con esos tomates
 */
+
 public class StoveCounter : BaseCounter, IObjectWithProgress
 {
+    public event EventHandler OnStoveActive; // para los sonidos
+    public event EventHandler OnStovePasive; // para los sonidos
     public event EventHandler<IObjectWithProgress.OnProgressChangedEventArgs> OnProgressChanged;
     public enum State
     {
@@ -41,7 +44,8 @@ public class StoveCounter : BaseCounter, IObjectWithProgress
         currentState = State.IDLE;
     }
 
-    /* TODO separar esta logica de estados en diferentes clases, además puedo agregar efectos y sonidos en cada estado, si hago todo aca es un quilombo ademas de poco cohesivo. */
+    /* Es posible separar la logica esta en diferentes estado, pero la verdad como es bastante simple lo puedo dejar aca. */
+    /* En cada cambio de estado tengo que emitir el evento para que actúe el sonido. Si paso a un estado Activo, emito OnStoveActive */
     private void Update()
     {
         switch (currentState)
@@ -51,7 +55,7 @@ public class StoveCounter : BaseCounter, IObjectWithProgress
             case State.FRYING:
                 fryingTimer += Time.deltaTime;
                 OnProgressChanged?.Invoke(this, new IObjectWithProgress.OnProgressChangedEventArgs { currentProgress = fryingTimer / currentRecipe.GetTransitionTime() });
-                if(fryingTimer >= currentRecipe.GetTransitionTime())
+                if (fryingTimer >= currentRecipe.GetTransitionTime())
                 {
                     // ya ta frito como nuestra economia :'(
                     fryingTimer = 0;
@@ -71,6 +75,7 @@ public class StoveCounter : BaseCounter, IObjectWithProgress
                     Fried();
                     currentState = State.BURNED;
                     OnStateChanged?.Invoke(this, new OnStateChangedEventArgs { state = currentState });
+                    // TODO emitir evento para que, al estar quemandose, se dispare un sonidito PII PII PII y ademas se cambie el efecto visual para que tire humo
                 }
                 break;
             case State.BURNED:
@@ -93,27 +98,32 @@ public class StoveCounter : BaseCounter, IObjectWithProgress
             // Al poner algo, se cambia el estado de la cocina y se dispara el evento
             currentState = State.FRYING;
             OnStateChanged?.Invoke(this, new OnStateChangedEventArgs { state = currentState });
+            OnStoveActive?.Invoke(this, EventArgs.Empty);
 
         }
         else if (!player.GetKitchenObject() && HasKitchenObject())
         {
+            /* Si el jugador no tiene nada en la mano y hay algo cocinandose => lo agarra */
             kitchenObject.SetNewParent(PlayerController.Instance);
             currentState = State.IDLE;
             fryingTimer = 0f;
             OnProgressChanged?.Invoke(this, new IObjectWithProgress.OnProgressChangedEventArgs { currentProgress = fryingTimer / currentRecipe.GetTransitionTime() });
             OnStateChanged?.Invoke(this, new OnStateChangedEventArgs { state = currentState });
+            OnStovePasive?.Invoke(this, EventArgs.Empty);
         }
         else if (HasKitchenObject() && player.HasKitchenObject())
         {
             if (player.GetKitchenObject().TryGetPlate(out PlateKitchenObject plate))
             {
-                // Intento combinarlo con lo que hay sobre la mesa
+                /* Si la mesa tiene un objeto cocinandose && el jugador tiene un objeto =>
+                 * Si ese objeto es un plato, le doy el item que se está cocinando para que intente combinarlo y agregarlo al plato */
                 plate.TryAddIngredient(kitchenObject.GetKitchenObjectSO());
                 kitchenObject.DestroySelf();
                 currentState = State.IDLE;
                 fryingTimer = 0f;
                 OnProgressChanged?.Invoke(this, new IObjectWithProgress.OnProgressChangedEventArgs { currentProgress = fryingTimer / currentRecipe.GetTransitionTime() });
                 OnStateChanged?.Invoke(this, new OnStateChangedEventArgs { state = State.IDLE });
+                OnStovePasive?.Invoke(this, EventArgs.Empty);
             }
         }
     }
@@ -146,5 +156,4 @@ public class StoveCounter : BaseCounter, IObjectWithProgress
         return fryingRecipes.AsQueryable<FryingRecipeSO>().Any(recipe => recipe.GetKitchenObjectSOInput() == kosoInput);
     }
 
-    
 }

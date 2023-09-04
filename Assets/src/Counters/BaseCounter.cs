@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -14,6 +15,8 @@ using UnityEngine;
  */
 public class BaseCounter : MonoBehaviour, IKitchenObjectParent
 {
+    public static event EventHandler OnDrop;
+
     [SerializeField] protected Transform spawnPoint;
     protected KitchenObject kitchenObject;
     public virtual void Interact() { }
