@@ -8,6 +8,8 @@ using UnityEngine;
  */
 public class PlayerController : MonoBehaviour, IKitchenObjectParent
 {
+    [SerializeField] private GameManager gameManager;
+
     [SerializeField]
     private float movementSpeed = 5f;
     [SerializeField]
@@ -88,6 +90,7 @@ public class PlayerController : MonoBehaviour, IKitchenObjectParent
 
     private void GameInput_OnInteractAction(object sender, System.EventArgs e)
     {
+        if (!gameManager.IsGamePlaying()) return;
         if (selectedCounter)
         {
             selectedCounter.Interact();
@@ -96,6 +99,7 @@ public class PlayerController : MonoBehaviour, IKitchenObjectParent
 
     private void GameInput_OnUseObjectAction(object sender, System.EventArgs e)
     {
+        if (!gameManager.IsGamePlaying()) return;
         if (selectedCounter)
         {
             selectedCounter.Use();
@@ -104,6 +108,7 @@ public class PlayerController : MonoBehaviour, IKitchenObjectParent
 
     private void Update()
     {
+        if (!gameManager.IsGamePlaying()) return;
         HandleMovement();
         HandleInteractions();
     }
