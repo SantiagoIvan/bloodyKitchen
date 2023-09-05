@@ -22,8 +22,8 @@ public class DeliveryManager : MonoBehaviour
     [SerializeField] private float spawnTime = 1f; // en segundos
     private float currentTime;
     [SerializeField] private int maxOrders = 1;
-    private int ordersCompleted = 0;
-    private int wrongOrdersDelivered = 0;
+    private int ordersDelivered = 0;
+    private int uncompletedOrders = 0;
 
     public event EventHandler<OnOrderSpawnedEventArgs> OnOrderSpawned;
     public event EventHandler<OnOrderCompletedEventArgs> OnOrderCompleted;
@@ -75,8 +75,8 @@ public class DeliveryManager : MonoBehaviour
 
     private void OrderCompleted(string recipeName)
     {
-        
-        ordersCompleted++;
+
+        ordersDelivered++;
         RecipeSO target = recipes.GetRecipeSOByName(recipeName);
         orders.Remove(target);
         OnOrderCompleted?.Invoke(this, new OnOrderCompletedEventArgs { recipe = target });
@@ -89,11 +89,14 @@ public class DeliveryManager : MonoBehaviour
         }
         else
         {
-            wrongOrdersDelivered++;
+            uncompletedOrders++;
             OnWrongPlateDelivered?.Invoke(this, EventArgs.Empty);
             Debug.Log("WRONG PLATE!");
         }
     }
 
     public List<RecipeSO> GetOrders(){ return orders; }
+
+    public int GetOrdersDelivered() { return ordersDelivered; }
+    public int GetUncompletedOrders() { return uncompletedOrders; }
 }

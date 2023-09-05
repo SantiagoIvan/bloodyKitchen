@@ -7,6 +7,13 @@ public class GameManager : MonoBehaviour
 {
     public event EventHandler OnStateChanged;
     public event EventHandler<OnCountdownEventArgs> OnCountdown;
+    public event EventHandler OnGameOver;
+    public event EventHandler<OnGameStartedEventArgs> OnGameStarted;
+
+    public class OnGameStartedEventArgs
+    {
+        public float limitTime;
+    }
     public class OnCountdownEventArgs
     {
         public int count;
@@ -23,10 +30,10 @@ public class GameManager : MonoBehaviour
 
     private State state;
 
-    
+    private const float GAMEPLAY_TIME_LIMIT = 20;
     private float waitingToStartTimer = 1f; // este es simplemente para que todo arranque
     private float countdownToStartTimer = 3f; // 3,2,1,GOO
-    private float gamePlayingTimer = 60f; // 1 min de gameplay
+    private float gamePlayingTimer = GAMEPLAY_TIME_LIMIT; // 1 min de gameplay
 
     // va a tener mas sentido en el multiplayer cuando estemos esperando a que todos los jugadores tengan este estado para empezar
     private void Awake()
@@ -54,6 +61,7 @@ public class GameManager : MonoBehaviour
                 {
                     state = State.PLAYING;
                     OnStateChanged?.Invoke(this, EventArgs.Empty);
+                    OnGameStarted?.Invoke(this, new OnGameStartedEventArgs { limitTime = GAMEPLAY_TIME_LIMIT});
                 }
                 break;
             case State.PLAYING:
@@ -62,6 +70,7 @@ public class GameManager : MonoBehaviour
                 {
                     state = State.GAME_OVER;
                     OnStateChanged?.Invoke(this, EventArgs.Empty);
+                    OnGameOver?.Invoke(this, EventArgs.Empty);
                 }
                 break;
         }
@@ -78,4 +87,5 @@ public class GameManager : MonoBehaviour
     {
         return countdownToStartTimer;
     }
+    public bool IsGameOver() { return state == State.GAME_OVER;}
 }
