@@ -24,6 +24,10 @@ public class CuttingCounter : BaseCounter, IObjectWithProgress
     public event EventHandler OnCuttingActionTriggered;
 
     public static event EventHandler OnGlobalCuttingActionTriggered; // para los sonidos
+    new public static void ResetStaticFields()
+    {
+        OnGlobalCuttingActionTriggered= null;
+    }
 
     public event EventHandler<IObjectWithProgress.OnProgressChangedEventArgs> OnProgressChanged; // Esto es porque esa clase correspondiente a los Args, esta dentro de la Interfaz. Si yo creo otra igual aca adentro, va a ser diferente.
 

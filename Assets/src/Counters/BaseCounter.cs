@@ -16,6 +16,10 @@ using UnityEngine;
 public class BaseCounter : MonoBehaviour, IKitchenObjectParent
 {
     public static event EventHandler OnDrop;
+    public static void ResetStaticFields()
+    {
+        OnDrop = null;
+    }
 
     [SerializeField] protected Transform spawnPoint;
     protected KitchenObject kitchenObject;

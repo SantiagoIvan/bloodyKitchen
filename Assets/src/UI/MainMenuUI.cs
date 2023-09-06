@@ -13,6 +13,7 @@ public class MainMenuUI : MonoBehaviour
     {
         playBtn.onClick.AddListener(OnPlayClick);
         quitBtn.onClick.AddListener(OnQuitClick);
+        Time.timeScale = 1.0f; // si voy al menu cuando tiro pausa, se me queda clavado el timescale=0 de cuando pongo pausa.
     }
 
     private void OnPlayClick()

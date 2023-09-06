@@ -60,6 +60,15 @@ public class GameInput : MonoBehaviour
     private PlayerInputActions inputActions;
     public event EventHandler OnInteractAction;
     public event EventHandler OnUseObjectAction;
+    public event EventHandler OnPauseAction;
+
+    // en los cambios de escena, todos los gameOBjects se destruyen a menos que se diga lo contrario.
+    // La clase PlayerInputActions creo que no lo hace, pero el tema es que si tiro pausa dsp de una partida tengo errores
+    // porque intento referenciar algo que ya fue destruido asi que tengo que solucionarlo aca
+    // otra cosa que no se borra y que persiste luego de los cambios de escena, son los campos STATIC asi que cuidado con eso porque puedo tener comportamiento no deseado
+    // En este caso tengo al evento estatico del CuttingCounter para los sonidos. Si reseteo el juego voy a ver que los listeners de ese evento se van a ir sumando infinitamente, no se limpian
+    // Lo cual puede surgir en errores porque si yo hago un debug dentro del listener, como las instancias viejas van a estar destruidas, va a tirar error.
+    // GO TO ResetStaticFieldsManager
     private void Awake()
     {
         inputActions = new PlayerInputActions();
@@ -67,6 +76,21 @@ public class GameInput : MonoBehaviour
 
         inputActions.Player.Interact.performed += Interact_performed;
         inputActions.Player.UseObject.performed += UseObject_performed;
+        inputActions.Player.Pause.performed += Pause_performed;
+    }
+
+    private void OnDestroy()
+    {
+        inputActions.Player.Interact.performed -= Interact_performed;
+        inputActions.Player.UseObject.performed -= UseObject_performed;
+        inputActions.Player.Pause.performed -= Pause_performed;
+
+        inputActions.Dispose(); // memory free
+    }
+
+    private void Pause_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
+    {
+        OnPauseAction?.Invoke(this, EventArgs.Empty);
     }
 
     private void UseObject_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
