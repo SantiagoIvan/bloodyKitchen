@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameOverUI : MonoBehaviour
 {
@@ -9,11 +10,15 @@ public class GameOverUI : MonoBehaviour
     [SerializeField] private TextMeshProUGUI uncompletedOrdersNumber;
     private GameManager gameManager;
     [SerializeField] private DeliveryManager deliveryManager;
+    [SerializeField] private Button playBtn;
+    [SerializeField] private Button quitBtn;
 
     private void Start()
     {
         gameManager = GameManager.Instance;
         gameManager.OnGameOver += GameManager_OnGameOver;
+        playBtn.onClick.AddListener(() => { SceneLoader.Load(SceneLoader.Scene.GameScene); });
+        quitBtn.onClick.AddListener(() => { SceneLoader.Load(SceneLoader.Scene.MainMenuScene); });
         Hide();
     }
 
