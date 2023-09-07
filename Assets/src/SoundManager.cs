@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 /* Asi como tengo este Sound manager para los efectos visuales, tambien puedo tener un Sound manager para cada prefab. Depende como lo quiera encarar.
  * En este caso, aca capture los efectos de sonido aca y para la cocina, hice un SoundManager en su prefab. Lo mismo sucederá para los footsteps. Voy a hacer un componente adentro que se encargue de todos los sonidos
@@ -14,8 +15,9 @@ public class SoundManager : MonoBehaviour
     [SerializeField] DeliveryCounter deliveryCounter; // como tengo uno solo, lo linkeo manualmente. Si mañana agrego mas y que cada uno gestione sus pedidos, lo refactorizaré. Lo puedo hacer un evento estatico.
 
 
-    private const float DEFAULT_VOLUME = 0.75f;
-    private Vector3 cameraPos;
+    private const float DEFAULT_VOLUME_MULTIPLIER = 1f;
+    private float currentVolume = .5f;
+    private const float MAX_VOLUME = 1f;
 
     private void Start()
     {
@@ -62,13 +64,20 @@ public class SoundManager : MonoBehaviour
     }
 
     // si el sonido se produce en una posición lejos de la cámara, se escuchará lejano
-    private void PlaySound(AudioClip audio, Vector3 position, float volumne = DEFAULT_VOLUME)
+    private void PlaySound(AudioClip audio, Vector3 position, float volumeMultiplier = DEFAULT_VOLUME_MULTIPLIER)
     {
-        AudioSource.PlayClipAtPoint(audio, position, volumne);
+        AudioSource.PlayClipAtPoint(audio, position, volumeMultiplier * currentVolume);
     }
-    private void PlaySound(AudioClip[] audioArray, Vector3 position, float volumne = DEFAULT_VOLUME)
+    private void PlaySound(AudioClip[] audioArray, Vector3 position, float volumeMultiplier = DEFAULT_VOLUME_MULTIPLIER)
     {
         int rd = Random.Range(0, audioArray.Length);
-        PlaySound(audioArray[rd], position, volumne);
+        PlaySound(audioArray[rd], position, volumeMultiplier * currentVolume);
     }
+
+    public void ChangeSound()
+    {
+        currentVolume = (currentVolume + .1f) % (MAX_VOLUME+.1f); // si pongo modulo n, el resultado nunca va a dar n sino hasta n-1. Yo quiero que el volumen llegue a 10 inclusive
+    }
+
+    public float GetCurrentVolume() { return  currentVolume; }
 }
