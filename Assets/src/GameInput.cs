@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
+using static OptionsUI;
 
 public class GameInput : MonoBehaviour
 {
@@ -56,7 +58,7 @@ public class GameInput : MonoBehaviour
      *  Es necesario tener suscriptores a la hora de disparar el evento.
      */
 
-
+    private const string PLAYER_PREFS_INPUT_BINDINGS = "InputBindings";
     private PlayerInputActions inputActions;
     public event EventHandler OnInteractAction;
     public event EventHandler OnUseObjectAction;
@@ -69,14 +71,33 @@ public class GameInput : MonoBehaviour
     // En este caso tengo al evento estatico del CuttingCounter para los sonidos. Si reseteo el juego voy a ver que los listeners de ese evento se van a ir sumando infinitamente, no se limpian
     // Lo cual puede surgir en errores porque si yo hago un debug dentro del listener, como las instancias viejas van a estar destruidas, va a tirar error.
     // GO TO ResetStaticFieldsManager
+
+
+    public enum Binding
+    {
+        MOVE_UP,
+        MOVE_DOWN,
+        MOVE_LEFT,
+        MOVE_RIGHT,
+        INTERACT,
+        USE,
+        PAUSE
+    }
+
+
     private void Awake()
     {
         inputActions = new PlayerInputActions();
+        if (PlayerPrefs.HasKey(PLAYER_PREFS_INPUT_BINDINGS))
+        {
+            inputActions.LoadBindingOverridesFromJson(PlayerPrefs.GetString(PLAYER_PREFS_INPUT_BINDINGS));
+        }
         inputActions.Player.Enable(); // Se encuentra en Actions maps dentro de la configuración del PlayerInputActions
 
         inputActions.Player.Interact.performed += Interact_performed;
         inputActions.Player.UseObject.performed += UseObject_performed;
         inputActions.Player.Pause.performed += Pause_performed;
+
     }
 
     private void OnDestroy()
@@ -107,5 +128,79 @@ public class GameInput : MonoBehaviour
     {
         Vector2 inputVector = inputActions.Player.Move.ReadValue<Vector2>();
         return inputVector.normalized; // esta normalizacion se puede hacer tambien desde PlayerInputActions, en una sección llamada "Processors"
+    }
+    public string GetBindingText(Binding binding)
+    {
+        switch (binding)
+        {
+            // para el caso de los movimientos, si me fijo en la configuración de PlayerInputActions, veo que estan todos en un array
+            case Binding.MOVE_UP:
+                return inputActions.Player.Move.bindings[1].ToDisplayString();
+            case Binding.MOVE_DOWN:
+                return inputActions.Player.Move.bindings[2].ToDisplayString();
+            case Binding.MOVE_LEFT:
+                return inputActions.Player.Move.bindings[3].ToDisplayString();
+            case Binding.MOVE_RIGHT:
+                return inputActions.Player.Move.bindings[4].ToDisplayString();
+            case Binding.INTERACT:
+                return inputActions.Player.Interact.bindings[0].ToDisplayString();
+            case Binding.USE:
+                return inputActions.Player.UseObject.bindings[0].ToDisplayString();
+            case Binding.PAUSE:
+                return inputActions.Player.Pause.bindings[0].ToDisplayString();
+        }
+        return "";
+    }
+
+    public void Rebind(Binding binding, Action onRebound)
+    {
+        inputActions.Player.Disable();
+        InputAction inputAction;
+        int keyIndex;
+
+        switch (binding)
+        {
+            default:
+            // para el caso de los movimientos, si me fijo en la configuración de PlayerInputActions, veo que estan todos en un array
+            case Binding.MOVE_UP:
+                inputAction = inputActions.Player.Move;
+                keyIndex = 1;
+                break;
+            case Binding.MOVE_DOWN:
+                inputAction = inputActions.Player.Move;
+                keyIndex = 2;
+                break;
+            case Binding.MOVE_LEFT:
+                inputAction = inputActions.Player.Move;
+                keyIndex = 3;
+                break;
+            case Binding.MOVE_RIGHT:
+                inputAction = inputActions.Player.Move;
+                keyIndex = 4;
+                break;
+            case Binding.INTERACT:
+                inputAction = inputActions.Player.Interact;
+                keyIndex = 0;
+                break;
+            case Binding.USE:
+                inputAction = inputActions.Player.UseObject;
+                keyIndex = 0;
+                break;
+            case Binding.PAUSE:
+                inputAction = inputActions.Player.Pause;
+                keyIndex = 0;
+                break;
+        }
+
+
+        inputAction.PerformInteractiveRebinding(keyIndex)
+            .OnComplete(callback =>
+            {
+                callback.Dispose();
+                inputActions.Player.Enable();
+                onRebound();
+                PlayerPrefs.SetString(PLAYER_PREFS_INPUT_BINDINGS, inputActions.SaveBindingOverridesAsJson());
+                PlayerPrefs.Save();
+            }).Start();
     }
 }
