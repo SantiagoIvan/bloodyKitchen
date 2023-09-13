@@ -22,7 +22,7 @@ public class PlateCounter : BaseCounter, IObjectWithProgress
 
     private void Update()
     {
-        if(plateQuantity < maxPlatesQuantity)
+        if(plateQuantity < maxPlatesQuantity && GameManager.Instance.IsGamePlaying())
         {
             timer += Time.deltaTime;
             OnProgressChanged?.Invoke(this, new IObjectWithProgress.OnProgressChangedEventArgs { currentProgress = timer / spawnTime });

@@ -44,7 +44,8 @@ public class DeliveryManager : MonoBehaviour
 
     private void Update()
     {
-        if(currentTime >= spawnTime && orders.Count < maxOrders)
+        if (!GameManager.Instance.IsGamePlaying()) return;
+        if(currentTime >= spawnTime && orders.Count < maxOrders) // para que me lleguen ordenes cuando el juego empieza y no mientras leo el tutorial
         {
             SpawnOrder();
             currentTime = 0;

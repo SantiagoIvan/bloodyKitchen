@@ -63,6 +63,7 @@ public class GameInput : MonoBehaviour
     public event EventHandler OnInteractAction;
     public event EventHandler OnUseObjectAction;
     public event EventHandler OnPauseAction;
+    public event EventHandler OnBindingRebind;
 
     // en los cambios de escena, todos los gameOBjects se destruyen a menos que se diga lo contrario.
     // La clase PlayerInputActions creo que no lo hace, pero el tema es que si tiro pausa dsp de una partida tengo errores
@@ -201,6 +202,7 @@ public class GameInput : MonoBehaviour
                 onRebound();
                 PlayerPrefs.SetString(PLAYER_PREFS_INPUT_BINDINGS, inputActions.SaveBindingOverridesAsJson());
                 PlayerPrefs.Save();
+                OnBindingRebind?.Invoke(this, EventArgs.Empty);
             }).Start();
     }
 }
