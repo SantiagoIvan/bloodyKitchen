@@ -63,6 +63,10 @@ public class SoundManager : MonoBehaviour
         PlaySound(audios.deliverySuccess, deliveryCounter.transform.position);
     }
 
+    public void PlayCountdownSound()
+    {
+        PlaySound(audios.warning, Vector3.zero);
+    }
     // si el sonido se produce en una posición lejos de la cámara, se escuchará lejano
     private void PlaySound(AudioClip audio, Vector3 position, float volumeMultiplier = DEFAULT_VOLUME_MULTIPLIER)
     {
