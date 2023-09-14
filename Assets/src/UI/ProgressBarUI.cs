@@ -8,16 +8,16 @@ public class ProgressUI : MonoBehaviour
 {
     [SerializeField] private Image progressImg;
     [SerializeField] private GameObject progressContainer;
-    
+
     private IObjectWithProgress objectWithProgress;
     private void Start()
     {
         objectWithProgress = progressContainer.GetComponent<IObjectWithProgress>();
-        if(objectWithProgress == null) {
+        if (objectWithProgress == null) {
             Debug.LogError("El progreso no tiene un container correcto");
         }
-        objectWithProgress.OnProgressChanged += ObjectWithProgress_OnProgressChanged;
         progressImg.fillAmount = 0;
+        objectWithProgress.OnProgressChanged += ObjectWithProgress_OnProgressChanged;
         Hide(); // Si hago el hide ANTES del listener, nunca se va a crear, por eso se hace aca, y no se hace antes ni en el awake que se ejecuta antes 
     }
 

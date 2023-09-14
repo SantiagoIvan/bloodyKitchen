@@ -10,6 +10,7 @@ using UnityEngine.Rendering;
  */
 public class SoundManager : MonoBehaviour
 {
+    public static SoundManager Instance { get; private set; }
     [SerializeField] private DeliveryManager manager;
     [SerializeField] AudioClipsSO audios;
     [SerializeField] DeliveryCounter deliveryCounter; // como tengo uno solo, lo linkeo manualmente. Si mañana agrego mas y que cada uno gestione sus pedidos, lo refactorizaré. Lo puedo hacer un evento estatico.
@@ -19,6 +20,10 @@ public class SoundManager : MonoBehaviour
     private float currentVolume = .5f;
     private const float MAX_VOLUME = 1f;
 
+    private void Awake()
+    {
+        Instance = this;
+    }
     private void Start()
     {
         manager.OnOrderCompleted += Manager_OnOrderCompleted;
@@ -62,7 +67,10 @@ public class SoundManager : MonoBehaviour
     {
         PlaySound(audios.deliverySuccess, deliveryCounter.transform.position);
     }
-
+    public void PlayWarningSound(Vector3 pos)
+    {
+        PlaySound(audios.warning, pos, 8); // CAMBIAR POR OTRO SONIDO MAS PIOLA
+    }
     public void PlayCountdownSound()
     {
         PlaySound(audios.warning, Vector3.zero);

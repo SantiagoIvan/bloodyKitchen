@@ -20,6 +20,8 @@ public class StoveCounter : BaseCounter, IObjectWithProgress
     public event EventHandler OnStoveActive; // para los sonidos
     public event EventHandler OnStovePasive; // para los sonidos
     public event EventHandler<IObjectWithProgress.OnProgressChangedEventArgs> OnProgressChanged;
+    public event EventHandler OnFoodAboutToBurn;
+    public event EventHandler OnFoodBurned;
     public enum State
     {
         IDLE,
@@ -62,7 +64,7 @@ public class StoveCounter : BaseCounter, IObjectWithProgress
                     Fried();
                     currentRecipe = GetRecipe();
                     currentState = State.FRIED;
-                    OnStateChanged?.Invoke(this, new OnStateChangedEventArgs { state = currentState});
+                    OnStateChanged?.Invoke(this, new OnStateChangedEventArgs { state = currentState });
                 }
                 break;
             case State.FRIED:
@@ -75,13 +77,13 @@ public class StoveCounter : BaseCounter, IObjectWithProgress
                     Fried();
                     currentState = State.BURNED;
                     OnStateChanged?.Invoke(this, new OnStateChangedEventArgs { state = currentState });
-                    // TODO emitir evento para que, al estar quemandose, se dispare un sonidito PII PII PII y ademas se cambie el efecto visual para que tire humo
+                    OnFoodBurned?.Invoke(this, EventArgs.Empty); // para que se dispare un sonidito PII PII PII y ademas se cambie el efecto visual para que tire humo
                 }
                 break;
             case State.BURNED:
                 break;
         }
-        
+
     }
     /* Coroutines: te permite ejecutar una función y retrasar su ejecución cuanto quisieras. Se puede pausar y retomar su ejecución en el siguiente frame manteniendo los valores de las variables.
      Es como si tuvieras un cron ejecutandose a la par, otro thread.
@@ -148,12 +150,17 @@ public class StoveCounter : BaseCounter, IObjectWithProgress
         if (HasRecipe(koso))
         {
             return fryingRecipes.First<FryingRecipeSO>(recipe => recipe.GetKitchenObjectSOInput() == koso);
-            
-        }else return null;
+
+        }
+        else return null;
     }
     private bool HasRecipe(KitchenObjectSO kosoInput)
     {
         return fryingRecipes.AsQueryable<FryingRecipeSO>().Any(recipe => recipe.GetKitchenObjectSOInput() == kosoInput);
     }
-
+    public State GetState() { return currentState; }
+    public bool IsAboutToBurn()
+    {
+        return kitchenObject && currentState == State.FRIED && fryingTimer >= (currentRecipe.GetTransitionTime() / 2);
+    }
 }

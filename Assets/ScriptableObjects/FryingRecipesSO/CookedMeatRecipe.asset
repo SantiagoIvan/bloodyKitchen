@@ -15,4 +15,4 @@ MonoBehaviour:
   kitchenObjectInput: {fileID: 11400000, guid: 022373b0a5b64ff4797fd5efeecd482c, type: 2}
   kitchenObjectOutput: {fileID: 11400000, guid: 3d3b4e2b3d7be1f4ab6c4cf0aec21e62,
     type: 2}
-  transitionTime: 2
+  transitionTime: 5

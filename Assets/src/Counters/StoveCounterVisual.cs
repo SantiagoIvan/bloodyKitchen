@@ -28,8 +28,6 @@ public class StoveCounterVisual : MonoBehaviour
                 particleSystemObject.SetActive(true);
                 break;
             case State.FRIED:
-                // TODO aca puedo emitir un evento para disparar un sonidito PII PII PII para decir que esta listo y que sea captado por otra clase que se encargue de la parte de los sonidos y ésta lo active
-                
                 break;
             case State.BURNED: 
                 // TODO aca agregar la llamita
