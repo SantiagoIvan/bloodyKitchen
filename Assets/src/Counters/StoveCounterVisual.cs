@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using static StoveCounter;
 
+
+// Parte visual de la sarten
 public class StoveCounterVisual : MonoBehaviour
 {
     [SerializeField] private GameObject stoveOnVisualObject;
@@ -28,9 +30,10 @@ public class StoveCounterVisual : MonoBehaviour
                 particleSystemObject.SetActive(true);
                 break;
             case State.FRIED:
+                stoveOnVisualObject.SetActive(true);
+                particleSystemObject.SetActive(true);
                 break;
-            case State.BURNED: 
-                // TODO aca agregar la llamita
+            case State.BURNED:
                 break;
         }
     }

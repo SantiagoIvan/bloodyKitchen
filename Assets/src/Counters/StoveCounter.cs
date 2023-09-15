@@ -37,6 +37,7 @@ public class StoveCounter : BaseCounter, IObjectWithProgress
 
     [SerializeField] private float fryingTimer = 0;
     [SerializeField] private FryingRecipeSO[] fryingRecipes;
+    [SerializeField] private FryingRecipeSO[] burningRecipes;
     private FryingRecipeSO currentRecipe;
     private State currentState;
 
@@ -74,8 +75,8 @@ public class StoveCounter : BaseCounter, IObjectWithProgress
                 {
                     // se quemó
                     fryingTimer = 0;
-                    Fried();
                     currentState = State.BURNED;
+                    Fried();
                     OnStateChanged?.Invoke(this, new OnStateChangedEventArgs { state = currentState });
                     OnFoodBurned?.Invoke(this, EventArgs.Empty); // para que se dispare un sonidito PII PII PII y ademas se cambie el efecto visual para que tire humo
                 }
@@ -97,8 +98,12 @@ public class StoveCounter : BaseCounter, IObjectWithProgress
         {
             player.GetKitchenObject().SetNewParent(this);
             currentRecipe = GetRecipe();
+            // si no tiene SIGUIENTE_RECETA, significa que no tiene mas transiciones, si lo cocino un poco de mas ya se quema.
+            bool nextRecipe = HasRecipe(currentRecipe.GetKitchenObjectSOOutput());
+            if(nextRecipe) currentState = State.FRYING;
+            else currentState = State.FRIED;
+
             // Al poner algo, se cambia el estado de la cocina y se dispara el evento
-            currentState = State.FRYING;
             OnStateChanged?.Invoke(this, new OnStateChangedEventArgs { state = currentState });
             OnStoveActive?.Invoke(this, EventArgs.Empty);
 
@@ -136,7 +141,7 @@ public class StoveCounter : BaseCounter, IObjectWithProgress
             GetKitchenObject().DestroySelf();
             ClearKitchenObject();
             KitchenObject.SpawnKitchenObject(currentRecipe.GetKitchenObjectSOOutput(), this);
-
+            //currentRecipe = currentRecipe.GetKitchenObjectSOOutput();
         }
         catch (Exception e)
         {
