@@ -44,15 +44,16 @@ public class DeliveryResultUI : MonoBehaviour
     private void ShowTickImage()
     {
         gameObject.SetActive(true);
-        //animator.SetTrigger(POPUP);
         img.sprite = successSprite;
         img.color = successColor;
+        img.color = new Color(successColor.r, successColor.g, successColor.b);
+        animator.SetTrigger(POPUP);
     }
     private void ShowCrossImage()
     {
         gameObject.SetActive(true);
-        //animator.SetTrigger(POPUP);
         img.sprite = failedSprite;
-        img.color = failedColor;
+        img.color = new Color(failedColor.r, failedColor.g, failedColor.b);
+        animator.SetTrigger(POPUP);
     }
 }

@@ -11405,6 +11405,12 @@ PrefabInstance:
       propertyPath: deliveryManager
       value: 
       objectReference: {fileID: 1139046371}
+    - target: {fileID: 5178467824909939817, guid: 47fbbcb617f52b24c8c65ec57fffd811,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 6c562ac6d3e47ff4794df31886c6d864,
+        type: 3}
     - target: {fileID: 6790606131269235322, guid: 47fbbcb617f52b24c8c65ec57fffd811,
         type: 3}
       propertyPath: m_LocalPosition.x
