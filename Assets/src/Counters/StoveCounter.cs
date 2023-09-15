@@ -163,4 +163,8 @@ public class StoveCounter : BaseCounter, IObjectWithProgress
     {
         return kitchenObject && currentState == State.FRIED && fryingTimer >= (currentRecipe.GetTransitionTime() / 2);
     }
+    public bool IsBurning()
+    {
+        return currentState == State.BURNED;
+    }
 }

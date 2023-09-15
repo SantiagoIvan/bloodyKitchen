@@ -15,6 +15,7 @@ public class AudioClipsSO : ScriptableObject
     public AudioClip[] pickUp;
     public AudioClip stoveCooking;
     public AudioClip[] thrash;
-    public AudioClip[] warning;
-
+    public AudioClip countdown;
+    public AudioClip stoveWarning;
+    public AudioClip stoveBurning;
 }

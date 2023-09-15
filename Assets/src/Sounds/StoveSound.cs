@@ -7,7 +7,7 @@ public class StoveSound : MonoBehaviour
     [SerializeField] private AudioSource sizzleAudio;
     [SerializeField] private StoveCounter parent;
     private float warningSoundTimer = 1; // para no tirar PlaySound en cada frame y que se rebugee todo. Cuando esté habilitado para tirar el sonidito, lo tiro cada un segundo
-    private float currentTimer = 0;
+    private float currentTimer = 1;// para que empiece de una cuando sucede el evento y no tenga que esperar un segundo para que se active el sonido
 
     private void Awake()
     {
@@ -21,7 +21,16 @@ public class StoveSound : MonoBehaviour
             currentTimer += Time.deltaTime;
             if (currentTimer > warningSoundTimer)
             {
-                SoundManager.Instance.PlayWarningSound(parent.transform.position);
+                SoundManager.Instance.PlayStoveWarning(parent.transform.position);
+                currentTimer = 0;
+            }
+        }
+        else if (parent.IsBurning())
+        {
+            currentTimer += Time.deltaTime;
+            if (currentTimer > warningSoundTimer)
+            {
+                SoundManager.Instance.PlayStoveBurning(parent.transform.position);
                 currentTimer = 0;
             }
         }

@@ -36,7 +36,7 @@ public class GameManager : MonoBehaviour
     private State state;
     private State prevState;
 
-    private const float GAMEPLAY_TIME_LIMIT = 20;
+    private const float GAMEPLAY_TIME_LIMIT = 60;
     private float countdownToStartTimer = 3f; // 3,2,1,GOO
     private float gamePlayingTimer = GAMEPLAY_TIME_LIMIT; // 1 min de gameplay
 

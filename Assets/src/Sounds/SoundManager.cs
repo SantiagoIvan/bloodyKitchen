@@ -69,11 +69,19 @@ public class SoundManager : MonoBehaviour
     }
     public void PlayWarningSound(Vector3 pos)
     {
-        PlaySound(audios.warning, pos, 8); // CAMBIAR POR OTRO SONIDO MAS PIOLA
+        PlaySound(audios.stoveWarning, pos, 8); // CAMBIAR POR OTRO SONIDO MAS PIOLA
     }
     public void PlayCountdownSound()
     {
-        PlaySound(audios.warning, Vector3.zero);
+        PlaySound(audios.countdown, Vector3.zero);
+    }
+    public void PlayStoveWarning(Vector3 pos)
+    {
+        PlaySound(audios.stoveWarning, pos);
+    }
+    public void PlayStoveBurning(Vector3 pos)
+    {
+        PlaySound(audios.stoveBurning, pos);
     }
     // si el sonido se produce en una posición lejos de la cámara, se escuchará lejano
     private void PlaySound(AudioClip audio, Vector3 position, float volumeMultiplier = DEFAULT_VOLUME_MULTIPLIER)

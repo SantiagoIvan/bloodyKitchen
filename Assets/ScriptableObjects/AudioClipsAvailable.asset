@@ -39,6 +39,6 @@ MonoBehaviour:
   thrash:
   - {fileID: 8300000, guid: 4b70ec0f0afb9ac4ea7dfea07aca4eb4, type: 3}
   - {fileID: 8300000, guid: 6024ba1d53d005f48a96b3a9f6bacedd, type: 3}
-  warning:
-  - {fileID: 8300000, guid: b90d8099bdbf09a40ab1163556d5b5f4, type: 3}
-  - {fileID: 8300000, guid: b59c98e0066c41f42b8100f5cb180f5b, type: 3}
+  countdown: {fileID: 8300000, guid: b90d8099bdbf09a40ab1163556d5b5f4, type: 3}
+  stoveWarning: {fileID: 8300000, guid: 8c5c3b6708915474ab088500123d0deb, type: 3}
+  stoveBurning: {fileID: 8300000, guid: 2aec54f5048f01a47b8d4b69bdf5eaa2, type: 3}
