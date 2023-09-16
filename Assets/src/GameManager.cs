@@ -130,4 +130,5 @@ public class GameManager : MonoBehaviour
     }
 
     public bool IsGamePaused() { return state == State.GAME_PAUSED;}
+    public float GetCountdownToStartTimer() { return countdownToStartTimer; }
 }
