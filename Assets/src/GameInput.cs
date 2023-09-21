@@ -57,7 +57,7 @@ public class GameInput : MonoBehaviour
      *  - El tema del parentesis es similar al de Node Js. Si no es null, invoca a la función con esos argumentos.
      *  Es necesario tener suscriptores a la hora de disparar el evento.
      */
-
+    public static GameInput Instance { get; private set; }
     private const string PLAYER_PREFS_INPUT_BINDINGS = "InputBindings";
     private PlayerInputActions inputActions;
     public event EventHandler OnInteractAction;
@@ -88,6 +88,7 @@ public class GameInput : MonoBehaviour
 
     private void Awake()
     {
+        Instance = this;
         inputActions = new PlayerInputActions();
         if (PlayerPrefs.HasKey(PLAYER_PREFS_INPUT_BINDINGS))
         {

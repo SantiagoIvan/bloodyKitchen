@@ -8,6 +8,7 @@ public class MainMenuUI : MonoBehaviour
 {
     [SerializeField] private Button playBtn;
     [SerializeField] private Button quitBtn;
+    [SerializeField] private SelectDifUI selectDifUI;
 
     private void Awake()
     {
@@ -18,10 +19,20 @@ public class MainMenuUI : MonoBehaviour
 
     private void OnPlayClick()
     {
-        SceneLoader.Load(SceneLoader.Scene.GameScene);
+        selectDifUI.Show();
+        Hide();
     }
     private void OnQuitClick()
     {
         Application.Quit();
+    }
+
+    private void Hide()
+    {
+        gameObject.SetActive(false);
+    }
+    public void Show()
+    {
+        gameObject.SetActive(true);
     }
 }

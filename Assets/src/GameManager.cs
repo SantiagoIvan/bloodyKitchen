@@ -12,7 +12,9 @@ public class GameManager : MonoBehaviour
     public event EventHandler<OnGameStartedEventArgs> OnGameStarted;
     public event EventHandler OnGamePaused;
     public event EventHandler OnGameUnpaused;
+    private const string DIFFICULTY_STRING = "Difficulty";
     [SerializeField] private GameInput gameInput;
+    [SerializeField] private DeliveryManager deliveryManager;
     
 
     public class OnGameStartedEventArgs
@@ -36,9 +38,9 @@ public class GameManager : MonoBehaviour
     private State state;
     private State prevState;
 
-    private const float GAMEPLAY_TIME_LIMIT = 60;
+    private float gameplayLimit;
     private float countdownToStartTimer = 3f; // 3,2,1,GOO
-    private float gamePlayingTimer = GAMEPLAY_TIME_LIMIT; // 1 min de gameplay
+    private float gamePlayingTimer;
 
     // va a tener mas sentido en el multiplayer cuando estemos esperando a que todos los jugadores tengan este estado para empezar
     private void Awake()
@@ -51,6 +53,23 @@ public class GameManager : MonoBehaviour
     {
         gameInput.OnPauseAction += GameInput_OnPauseAction;
         gameInput.OnInteractAction += GameInput_OnInteractAction;
+        int dif = PlayerPrefs.GetInt(DIFFICULTY_STRING);
+        Debug.Log("Level selected: " + dif);
+
+        switch (dif)
+        {
+            case (int) SelectDifUI.Difficulty.EASY:
+                gameplayLimit = 120f;
+                deliveryManager.SetMaxOrders(2);
+                deliveryManager.SetSpawnTime(15);
+                break;
+            case (int)SelectDifUI.Difficulty.HARD:
+                gameplayLimit = 90f;
+                deliveryManager.SetMaxOrders(4);
+                deliveryManager.SetSpawnTime(8);
+                break;
+        }
+        gamePlayingTimer = gameplayLimit;
     }
 
     private void GameInput_OnInteractAction(object sender, EventArgs e)
@@ -80,7 +99,7 @@ public class GameManager : MonoBehaviour
                 {
                     state = State.PLAYING;
                     OnStateChanged?.Invoke(this, EventArgs.Empty);
-                    OnGameStarted?.Invoke(this, new OnGameStartedEventArgs { limitTime = GAMEPLAY_TIME_LIMIT});
+                    OnGameStarted?.Invoke(this, new OnGameStartedEventArgs { limitTime = gameplayLimit});
                 }
                 break;
             case State.PLAYING:

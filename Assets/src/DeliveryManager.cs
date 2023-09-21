@@ -19,9 +19,9 @@ public class DeliveryManager : MonoBehaviour
     private List<RecipeSO> orders;
     [SerializeField] private RecipesListSO recipes;
 
-    [SerializeField] private float spawnTime = 1f; // en segundos
+    private float spawnTime;
     private float currentTime;
-    [SerializeField] private int maxOrders = 1;
+    private int maxOrders;
     private int ordersDelivered = 0;
     private int uncompletedOrders = 0;
 
@@ -40,6 +40,10 @@ public class DeliveryManager : MonoBehaviour
     private void Awake()
     {
         orders = new List<RecipeSO>();
+    }
+    private void Start()
+    {
+        SpawnOrder();
     }
 
     private void Update()
@@ -100,4 +104,12 @@ public class DeliveryManager : MonoBehaviour
 
     public int GetOrdersDelivered() { return ordersDelivered; }
     public int GetUncompletedOrders() { return uncompletedOrders; }
+    public void SetMaxOrders(int q)
+    {
+        maxOrders = q;
+    }
+    public void SetSpawnTime(float q)
+    {
+        spawnTime = q;
+    }
 }

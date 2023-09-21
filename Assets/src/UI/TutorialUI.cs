@@ -12,12 +12,14 @@ public class TutorialUI : MonoBehaviour
     [SerializeField] private TextMeshProUGUI keyInteractText;
     [SerializeField] private TextMeshProUGUI keyUseText;
     [SerializeField] private TextMeshProUGUI keyPauseText;
-    [SerializeField] private GameInput gameInput;
-    [SerializeField] private GameManager gameManager;
+    private GameInput gameInput;
+    private GameManager gameManager;
 
     // tengo que escuchar el evento para cuando cambian las teclas asi actualizo esto
     private void Start()
     {
+        gameInput = GameInput.Instance;
+        gameManager = GameManager.Instance;
         gameInput.OnBindingRebind += GameInput_OnBindingRebind;
         gameManager.OnStateChanged += GameManager_OnStateChanged;
         UpdateVisual();

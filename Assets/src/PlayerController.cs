@@ -8,7 +8,7 @@ using UnityEngine;
  */
 public class PlayerController : MonoBehaviour, IKitchenObjectParent
 {
-    [SerializeField] private GameManager gameManager;
+    private GameManager gameManager;
 
     [SerializeField]
     private float movementSpeed = 5f;
@@ -28,7 +28,7 @@ public class PlayerController : MonoBehaviour, IKitchenObjectParent
     private const float RADIUS = .7f; // el scale de la esfera del cuerpo dividido 2.
     private const float PLAYER_HEIGHT = 2f; // lo mande a ojo, es lo de menos igual
     private const float INTERACT_DISTANCE = 2f;
-    [SerializeField]
+    
     private GameInput gameInput;
 
     /* La idea es la siguiente: cada vez que cambia la selección de una mesada, se dispara el evento. TODOS los ClearCounters van a estar escuchando por el evento
@@ -84,6 +84,8 @@ public class PlayerController : MonoBehaviour, IKitchenObjectParent
      */
     private void Start()
     {
+        gameManager = GameManager.Instance;
+        gameInput = GameInput.Instance;
         gameInput.OnInteractAction += GameInput_OnInteractAction; //Listener del evento
         gameInput.OnUseObjectAction += GameInput_OnUseObjectAction;
     }

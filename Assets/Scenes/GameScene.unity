@@ -4649,6 +4649,52 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ccec8c00e76ef654c84418f43d8f57a4, type: 3}
+--- !u!1 &620245861
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 620245863}
+  - component: {fileID: 620245862}
+  m_Layer: 0
+  m_Name: GameManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &620245862
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 620245861}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cd6e8fd2730c9c94ea3dd0d4958a48b8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameInput: {fileID: 182424837}
+  deliveryManager: {fileID: 1139046371}
+--- !u!4 &620245863
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 620245861}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &621777448 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6790606131269235322, guid: 47fbbcb617f52b24c8c65ec57fffd811,
@@ -5002,12 +5048,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 56f1775a66115ed40b54da46706132a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameManager: {fileID: 1063269702}
   movementSpeed: 5
   rotationSpeed: 10
   kitchenObject: {fileID: 0}
   spawnPoint: {fileID: 759942678}
-  gameInput: {fileID: 182424837}
 --- !u!4 &699700021
 Transform:
   m_ObjectHideFlags: 0
@@ -7716,51 +7760,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 859030982}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1063269701
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1063269703}
-  - component: {fileID: 1063269702}
-  m_Layer: 0
-  m_Name: GameManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1063269702
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1063269701}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cd6e8fd2730c9c94ea3dd0d4958a48b8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  gameInput: {fileID: 182424837}
---- !u!4 &1063269703
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1063269701}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &1071893534 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6779012813962055420, guid: bc0eacd33ba41a7469fe379a022cb1f7,
@@ -9547,7 +9546,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e34b54794f7a86d48bae8ab3ccb3b109, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameManager: {fileID: 1063269702}
+  gameManager: {fileID: 0}
   optionsUI: {fileID: 499770063}
   resumeBtn: {fileID: 558628687}
   quitBtn: {fileID: 2146863423}
@@ -10813,8 +10812,6 @@ MonoBehaviour:
   keyInteractText: {fileID: 1494337099}
   keyUseText: {fileID: 847504782}
   keyPauseText: {fileID: 325692783}
-  gameInput: {fileID: 182424837}
-  gameManager: {fileID: 1063269702}
 --- !u!1 &1514032418
 GameObject:
   m_ObjectHideFlags: 0
@@ -14059,11 +14056,11 @@ SceneRoots:
   - {fileID: 699700021}
   - {fileID: 900707163}
   - {fileID: 182424838}
-  - {fileID: 1063269703}
   - {fileID: 240741808}
   - {fileID: 1642112247}
   - {fileID: 168677604}
   - {fileID: 1205123049}
+  - {fileID: 620245863}
   - {fileID: 491257986}
   - {fileID: 1690583170}
   - {fileID: 1638905464}
