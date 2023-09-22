@@ -24,3 +24,4 @@ MonoBehaviour:
   - amount: 1
     typeIngredient: {fileID: 11400000, guid: 7a592ed3e2def714ebc6c19f030d3e93, type: 2}
   recipeName: Megadibu Burguer
+  price: 50

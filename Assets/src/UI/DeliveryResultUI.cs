@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEditor.Search;
 using UnityEngine;
 using UnityEngine.UI;
@@ -8,10 +9,9 @@ public class DeliveryResultUI : MonoBehaviour
 {
     [SerializeField] private DeliveryManager deliveryManager;
     [SerializeField] private Image img;
-    [SerializeField] private Color successColor;
     [SerializeField] private Color failedColor;
-    [SerializeField] private Sprite successSprite;
     [SerializeField] private Sprite failedSprite;
+    [SerializeField] private TextMeshProUGUI profitText;
     [SerializeField] private Animator animator;
     private const string POPUP = "PopUp";
 
@@ -39,19 +39,20 @@ public class DeliveryResultUI : MonoBehaviour
 
     private void DeliveryManager_OnOrderCompleted(object sender, DeliveryManager.OnOrderCompletedEventArgs e)
     {
-        ShowTickImage();
+        ShowSuccessProfit(e.recipe);
     }
-    private void ShowTickImage()
+    private void ShowSuccessProfit(RecipeSO recipe)
     {
+        profitText.text = "+ " + recipe.GetPrice().ToString();
+        img.gameObject.SetActive(false);
         gameObject.SetActive(true);
-        img.sprite = successSprite;
-        img.color = successColor;
-        img.color = new Color(successColor.r, successColor.g, successColor.b);
         animator.SetTrigger(POPUP);
     }
     private void ShowCrossImage()
     {
         gameObject.SetActive(true);
+        img.gameObject.SetActive(true);
+        profitText.text = "";
         img.sprite = failedSprite;
         img.color = new Color(failedColor.r, failedColor.g, failedColor.b);
         animator.SetTrigger(POPUP);

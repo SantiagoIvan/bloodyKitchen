@@ -37,10 +37,16 @@ public class GameManager : MonoBehaviour
 
     private State state;
     private State prevState;
-
-    private float gameplayLimit;
     private float countdownToStartTimer = 3f; // 3,2,1,GOO
     private float gamePlayingTimer;
+    private float gameplayLimit;
+
+    private const float LIMIT_TIME_EASY = 120f;
+    private const float LIMIT_TIME_HARD = 90f;
+    private const int MAX_ORDERS_EASY = 2;
+    private const int MAX_ORDERS_HARD = 4;
+    private const float SPAWN_TIME_EASY = 15;
+    private const float SPAWN_TIME_HARD = 8;
 
     // va a tener mas sentido en el multiplayer cuando estemos esperando a que todos los jugadores tengan este estado para empezar
     private void Awake()
@@ -59,14 +65,14 @@ public class GameManager : MonoBehaviour
         switch (dif)
         {
             case (int) SelectDifUI.Difficulty.EASY:
-                gameplayLimit = 120f;
-                deliveryManager.SetMaxOrders(2);
-                deliveryManager.SetSpawnTime(15);
+                gameplayLimit = LIMIT_TIME_EASY;
+                deliveryManager.SetMaxOrders(MAX_ORDERS_EASY);
+                deliveryManager.SetSpawnTime(SPAWN_TIME_EASY);
                 break;
             case (int)SelectDifUI.Difficulty.HARD:
-                gameplayLimit = 90f;
-                deliveryManager.SetMaxOrders(4);
-                deliveryManager.SetSpawnTime(8);
+                gameplayLimit = LIMIT_TIME_HARD;
+                deliveryManager.SetMaxOrders(MAX_ORDERS_HARD);
+                deliveryManager.SetSpawnTime(SPAWN_TIME_HARD);
                 break;
         }
         gamePlayingTimer = gameplayLimit;

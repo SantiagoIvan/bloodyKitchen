@@ -23,6 +23,8 @@ public class DeliveryManager : MonoBehaviour
     private float currentTime;
     private int maxOrders;
     private int ordersDelivered = 0;
+    private float profit = 0;
+    private float loss = 0;
     private int uncompletedOrders = 0;
 
     public event EventHandler<OnOrderSpawnedEventArgs> OnOrderSpawned;
@@ -40,10 +42,6 @@ public class DeliveryManager : MonoBehaviour
     private void Awake()
     {
         orders = new List<RecipeSO>();
-    }
-    private void Start()
-    {
-        SpawnOrder();
     }
 
     private void Update()
@@ -83,6 +81,7 @@ public class DeliveryManager : MonoBehaviour
 
         ordersDelivered++;
         RecipeSO target = recipes.GetRecipeSOByName(recipeName);
+        profit += target.GetPrice();
         orders.Remove(target);
         OnOrderCompleted?.Invoke(this, new OnOrderCompletedEventArgs { recipe = target });
     }
@@ -103,7 +102,7 @@ public class DeliveryManager : MonoBehaviour
     public List<RecipeSO> GetOrders(){ return orders; }
 
     public int GetOrdersDelivered() { return ordersDelivered; }
-    public int GetUncompletedOrders() { return uncompletedOrders; }
+    public int GetUncompletedOrders() { return uncompletedOrders + orders.Count; }
     public void SetMaxOrders(int q)
     {
         maxOrders = q;
@@ -111,5 +110,13 @@ public class DeliveryManager : MonoBehaviour
     public void SetSpawnTime(float q)
     {
         spawnTime = q;
+    }
+    public float GetProfit()
+    {
+        return profit;
+    }
+    public float GetLoss()
+    {
+        return loss + orders.Sum<RecipeSO>(recipe => recipe.GetPrice());
     }
 }

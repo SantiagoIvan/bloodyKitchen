@@ -24,3 +24,4 @@ MonoBehaviour:
   - amount: 1
     typeIngredient: {fileID: 11400000, guid: 6391504683a87ba4e8529043c6e3dae4, type: 2}
   recipeName: Complete Burguer
+  price: 35

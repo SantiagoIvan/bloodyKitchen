@@ -18,3 +18,4 @@ MonoBehaviour:
   - amount: 1
     typeIngredient: {fileID: 11400000, guid: 022373b0a5b64ff4797fd5efeecd482c, type: 2}
   recipeName: Basic Burguer
+  price: 20

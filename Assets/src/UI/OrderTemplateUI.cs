@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -9,6 +10,9 @@ public class OrderTemplateUI : MonoBehaviour
     [SerializeField] private TextMeshProUGUI recipeTitle;
     [SerializeField] private Transform iconContainer;
     [SerializeField] private Transform iconTemplate;
+    [SerializeField] private TextMeshProUGUI timeLeftToDeliverUI;
+    private float timeLeft;
+    public event EventHandler OnOrderTimeout;
 
     private void Awake()
     {
@@ -37,5 +41,6 @@ public class OrderTemplateUI : MonoBehaviour
                 spawned.gameObject.SetActive(true);
             }
         }
+        gameObject.SetActive(true);
     }
 }

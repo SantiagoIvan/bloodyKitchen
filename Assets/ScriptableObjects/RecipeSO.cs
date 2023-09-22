@@ -13,6 +13,7 @@ public class RecipeSO : ScriptableObject
 {
     [SerializeField] private List<Ingredient> ingredients;
     [SerializeField] private string recipeName;
+    [SerializeField] private float price;
 
     [Serializable]
     public struct Ingredient
@@ -68,4 +69,8 @@ public class RecipeSO : ScriptableObject
     }
 
     public List<Ingredient> GetIngredients() { return ingredients; }
+    public float GetPrice()
+    {
+        return price;
+    }
 }

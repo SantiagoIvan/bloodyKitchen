@@ -7,7 +7,9 @@ using UnityEngine.UI;
 public class GameOverUI : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI ordersDeliveredNumber;
+    [SerializeField] private TextMeshProUGUI profitNumber;
     [SerializeField] private TextMeshProUGUI uncompletedOrdersNumber;
+    [SerializeField] private TextMeshProUGUI lossNumber;
     private GameManager gameManager;
     [SerializeField] private DeliveryManager deliveryManager;
     [SerializeField] private Button playBtn;
@@ -29,6 +31,8 @@ public class GameOverUI : MonoBehaviour
             Show();
             ordersDeliveredNumber.text = deliveryManager.GetOrdersDelivered().ToString();
             uncompletedOrdersNumber.text = deliveryManager.GetUncompletedOrders().ToString();
+            profitNumber.text = deliveryManager.GetProfit().ToString();
+            lossNumber.text = deliveryManager.GetLoss().ToString();
         }
     }
     private void Update()

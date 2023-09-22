@@ -20,3 +20,4 @@ MonoBehaviour:
   - amount: 1
     typeIngredient: {fileID: 11400000, guid: ad094f4e2cf4cb645a2ebc1082e35cc9, type: 2}
   recipeName: Cheese Burguer
+  price: 25
