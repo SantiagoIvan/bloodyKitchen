@@ -55,6 +55,7 @@ public class PlateKitchenObject : KitchenObject
         else
         {
             SoundManager.Instance.PlayWarningSound(Vector3.zero);
+            throw new Exception("forbiden ingredient");
         }
     }
 

@@ -10,7 +10,10 @@ public class OrderTemplateUI : MonoBehaviour
     [SerializeField] private TextMeshProUGUI orderTitle;
     [SerializeField] private Transform iconContainer;
     [SerializeField] private Transform iconTemplate;
-    [SerializeField] private OrderTimerUI orderTimer;
+    [SerializeField] private OrderTimer orderTimer;
+    [SerializeField] private Animator animator;
+    private const string CLOSE_TO_TIMEOUT = "CloseToTimeout";
+    private int orderId;
 
     private void Awake()
     {
@@ -20,7 +23,10 @@ public class OrderTemplateUI : MonoBehaviour
     public void SetOrder(Order order)
     {
         orderTitle.text = order.GetRecipeName();
+        orderTimer.SetOrderId(order.GetId());
         orderTimer.SetTimer(order.GetTimeout());
+        orderTimer.OnCloseToTimeout += OrderTimer_OnCloseToTimeout;
+        orderId = order.GetId();
 
         foreach (Transform child in iconContainer)
         {
@@ -30,7 +36,7 @@ public class OrderTemplateUI : MonoBehaviour
             }
         }
 
-        // genero las recetas, las spawneo en el contenedor
+        // genero los ingredientes de la orden, las spawneo en el contenedor
         foreach (RecipeSO.Ingredient ingredient in order.GetRecipe().GetIngredients())
         {
             for (int i = 0; i < ingredient.amount; i++)
@@ -41,5 +47,14 @@ public class OrderTemplateUI : MonoBehaviour
             }
         }
         gameObject.SetActive(true);
+    }
+
+    private void OrderTimer_OnCloseToTimeout(object sender, EventArgs e)
+    {
+        animator.SetBool(CLOSE_TO_TIMEOUT, true);
+    }
+
+    public int GetOrderId() { 
+        return orderId;
     }
 }

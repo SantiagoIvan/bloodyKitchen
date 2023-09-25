@@ -27,7 +27,7 @@ public class RecipeSO : ScriptableObject
     * Puedo armar un array de frecuencias para el plato y la receta y compararlos. Puedo modificar el RecipeSO para que en lugar de tener una lista simple, tenga una lista de 
     * structs con un KitchenObjectSO y la cantidad
     */
-    public bool IsPlateCorrect(PlateKitchenObject plate, out string recipe)
+    public bool IsPlateCorrect(PlateKitchenObject plate)
     {
         Debug.Log("ANALYZING IF PLATE IS EQUAL TO " + recipeName);
         Dictionary<KitchenObjectSO, int> map = new Dictionary<KitchenObjectSO, int>();
@@ -51,16 +51,12 @@ public class RecipeSO : ScriptableObject
                 map.TryGetValue(ingredients[i].typeIngredient, out int quantity);
                 if(quantity != ingredients[i].amount)
                 {
-                    recipe = null;
                     return false;
                 }
             }
-            recipe = recipeName;
-            Debug.Log("Found a match!!! " + recipe);
+            Debug.Log("Found a match!!! " + recipeName);
             return true;
         }
-
-        recipe = null;
         return false;
     }
     public string GetRecipeName()

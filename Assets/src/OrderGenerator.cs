@@ -9,7 +9,7 @@ public class OrderGenerator : MonoBehaviour
     public static OrderGenerator Instance { get; private set; }
     private const float MIN_TIMEOUT = 15f;
     private const float MAX_TIMEOUT = 25f;
-    private int orderCount = 0;
+    private int orderCount = 1;
 
     private void Awake()
     {
@@ -22,6 +22,8 @@ public class OrderGenerator : MonoBehaviour
         RecipeSO randomRecipe = recipes.GetRandomRecipeSO();
         System.Random rd = new System.Random();
         int generated = rd.Next((int) MIN_TIMEOUT, (int) MAX_TIMEOUT);
-        return new Order(orderCount, randomRecipe, generated);
+        Order newOrder = new Order(orderCount, randomRecipe, generated);
+        orderCount++;
+        return newOrder;
     }
 }

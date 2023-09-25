@@ -43,6 +43,16 @@ public class DeliveryManager : MonoBehaviour
     {
         orders = new List<Order>();
     }
+    private void Start()
+    {
+        OrderTimer.OnOrderTimeout += OrderTimerUI_OnOrderTimeout;
+    }
+
+    private void OrderTimerUI_OnOrderTimeout(object sender, OrderTimer.OnOrderTimeOutEventArgs e)
+    {
+        OrderTimeOut(e.id);
+        Debug.Log("TIMEOUT FROM MANAGER");
+    }
 
     private void Update()
     {
@@ -62,37 +72,38 @@ public class DeliveryManager : MonoBehaviour
     {
         Order orderSpawned = OrderGenerator.Instance.GenerateNewOrder();
         orders.Add(orderSpawned);
-        OnOrderSpawned?.Invoke(this, new OnOrderSpawnedEventArgs { order = orderSpawned });
         Debug.Log("[LOG] ORDER_SPAWNED: "+orderSpawned.GetRecipe() +" - " + orderSpawned.GetTimeout().ToString());
+        OnOrderSpawned?.Invoke(this, new OnOrderSpawnedEventArgs { order = orderSpawned });
     }
 
-    private bool IsPlateCorrect(PlateKitchenObject plate, out string recipeName)
+    private bool IsPlateCorrect(PlateKitchenObject plate, out int orderId)
     {
         for (int i = 0; i < orders.Count; i++)
         {
-            if (orders[i].GetRecipe().IsPlateCorrect(plate, out recipeName)) return true;
+            if (orders[i].GetRecipe().IsPlateCorrect(plate))
+            {
+                orderId = orders[i].GetId();
+                return true;
+            }
         }
-
-        recipeName = null;
+        orderId = -1;
         return false;
     }
 
-    private void OrderCompleted(string recipeName)
+    private void OrderCompleted(int orderId)
     {
 
         ordersDelivered++;
-        //RecipeSO target = recipes.GetRecipeSOByName(recipeName);
-        //profit += target.GetPrice();
-        Order ord = orders.Find( order => order.GetRecipeName() == recipeName);
+        Order ord = orders.Find( order => order.GetId() == orderId);
         profit += ord.GetPrice();
         orders.Remove(ord);
         OnOrderCompleted?.Invoke(this, new OnOrderCompletedEventArgs { order = ord });
     }
     public void DeliverPlate(PlateKitchenObject plate)
     {
-        if(IsPlateCorrect(plate, out string recipeName)){
-            OrderCompleted(recipeName);
-            Debug.Log("Plate successfully delivered! " + recipeName);
+        if(IsPlateCorrect(plate, out int orderId)){
+            OrderCompleted(orderId);
+            Debug.Log("Plate successfully delivered! Order ID: " + orderId.ToString());
         }
         else
         {
@@ -121,5 +132,12 @@ public class DeliveryManager : MonoBehaviour
     public float GetLoss()
     {
         return loss + orders.Sum<Order>(order => order.GetRecipe().GetPrice());
+    }
+    public void OrderTimeOut(int orderId)
+    {
+        uncompletedOrders++;
+        Order ord = orders.Find(order => order.GetId() == orderId);
+        loss += ord.GetPrice();
+        orders.Remove(ord);
     }
 }

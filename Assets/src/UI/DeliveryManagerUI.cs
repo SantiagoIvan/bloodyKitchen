@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 
@@ -12,8 +13,6 @@ public class DeliveryManagerUI : MonoBehaviour
     [SerializeField] DeliveryManager deliveryManager;
     [SerializeField] private Transform listContainer;
     [SerializeField] private Transform orderTemplate;
-
-
     private void Awake()
     {
         orderTemplate.gameObject.SetActive(false); // desde la UI lo apago pero por las dudas lo hago aca tmb
@@ -25,36 +24,43 @@ public class DeliveryManagerUI : MonoBehaviour
     {
         deliveryManager.OnOrderSpawned += DeliveryManager_OnOrderSpawned;
         deliveryManager.OnOrderCompleted += DeliveryManager_OnOrderCompleted;
-        UpdateVisual();
+        OrderTimer.OnOrderTimeout += OrderTimerUI_OnOrderTimeout;
+    }
+
+    private void OrderTimerUI_OnOrderTimeout(object sender, OrderTimer.OnOrderTimeOutEventArgs e)
+    {
+        RemoveOrderUI(e.id);
+        Debug.Log("TIMEOUT FROM MANAGER UI");
     }
 
     private void DeliveryManager_OnOrderCompleted(object sender, DeliveryManager.OnOrderCompletedEventArgs e)
     {
-        UpdateVisual();
+        RemoveOrderUI(e.order.GetId());
     }
 
     private void DeliveryManager_OnOrderSpawned(object sender, DeliveryManager.OnOrderSpawnedEventArgs e)
     {
-        UpdateVisual();
+        // creo la orden visual
+        Transform spawned = Instantiate(orderTemplate, listContainer);
+        spawned.GetComponent<OrderTemplateUI>().SetOrder(e.order);
+        spawned.gameObject.SetActive(true);
     }
 
-    private void UpdateVisual()
+    private void RemoveOrderUI(int orderTarget)
     {
-        /* Misma idea que con los iconos del plato. Borro a todos y los vuelvo a crear, dejando al template solamente */
-        foreach (Transform child in listContainer)
+        for(int i = 0; i < listContainer.childCount; i++)
         {
-            if (child != orderTemplate.gameObject.transform)
+            Transform child = listContainer.GetChild(i);
+            if(child != orderTemplate && child.GetComponent<OrderTemplateUI>().GetOrderId() == orderTarget)
             {
+                Debug.Log("[CHILD]: I'M ORDER TARGET. ");
                 Destroy(child.gameObject);
+                break;
             }
-        }
-
-        // genero las recetas, las spawneo en el contenedor
-        foreach (Order order in deliveryManager.GetOrders())
-        {
-            Transform spawned = Instantiate(orderTemplate, listContainer);
-            spawned.GetComponent<OrderTemplateUI>().SetOrder(order);
-            spawned.gameObject.SetActive(true);
+            else
+            {
+                Debug.Log("[CHILD]: i'M NOT THE TARGET");
+            }
         }
     }
 }
