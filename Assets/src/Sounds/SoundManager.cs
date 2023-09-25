@@ -69,7 +69,7 @@ public class SoundManager : MonoBehaviour
     }
     public void PlayWarningSound(Vector3 pos)
     {
-        PlaySound(audios.stoveWarning, pos, 8); // CAMBIAR POR OTRO SONIDO MAS PIOLA
+        PlaySound(audios.stoveWarning, pos, 8);
     }
     public void PlayCountdownSound()
     {

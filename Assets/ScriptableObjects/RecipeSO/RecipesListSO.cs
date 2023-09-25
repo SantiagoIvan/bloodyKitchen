@@ -6,6 +6,11 @@ using UnityEngine;
 [CreateAssetMenu()]
 public class RecipesListSO : ScriptableObject
 {
+    public static RecipesListSO Instance { get; private set; }
+    private void Awake()
+    {
+        Instance = this;
+    }
     [SerializeField] private List<RecipeSO> availableRecipes;
     
     public RecipeSO GetRandomRecipeSO()

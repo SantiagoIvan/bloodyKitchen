@@ -50,10 +50,10 @@ public class DeliveryManagerUI : MonoBehaviour
         }
 
         // genero las recetas, las spawneo en el contenedor
-        foreach (RecipeSO order in deliveryManager.GetOrders())
+        foreach (Order order in deliveryManager.GetOrders())
         {
             Transform spawned = Instantiate(orderTemplate, listContainer);
-            spawned.GetComponent<OrderTemplateUI>().SetRecipeSO(order);
+            spawned.GetComponent<OrderTemplateUI>().SetOrder(order);
             spawned.gameObject.SetActive(true);
         }
     }

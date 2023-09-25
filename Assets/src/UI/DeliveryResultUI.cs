@@ -15,13 +15,9 @@ public class DeliveryResultUI : MonoBehaviour
     [SerializeField] private Animator animator;
     private const string POPUP = "PopUp";
 
-    private bool delivered;
-    private float timer = 0;
-    private const float LIMIT_TIMER = 1f;
 
     private void Awake()
     {
-        delivered = false;
         animator = GetComponent<Animator>();
     }
     private void Start()
@@ -39,11 +35,11 @@ public class DeliveryResultUI : MonoBehaviour
 
     private void DeliveryManager_OnOrderCompleted(object sender, DeliveryManager.OnOrderCompletedEventArgs e)
     {
-        ShowSuccessProfit(e.recipe);
+        ShowSuccessProfit(e.order);
     }
-    private void ShowSuccessProfit(RecipeSO recipe)
+    private void ShowSuccessProfit(Order order)
     {
-        profitText.text = "+ " + recipe.GetPrice().ToString();
+        profitText.text = "+ " + order.GetPrice().ToString();
         img.gameObject.SetActive(false);
         gameObject.SetActive(true);
         animator.SetTrigger(POPUP);

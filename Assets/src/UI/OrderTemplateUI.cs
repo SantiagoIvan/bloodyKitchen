@@ -7,21 +7,20 @@ using UnityEngine.UI;
 
 public class OrderTemplateUI : MonoBehaviour
 {
-    [SerializeField] private TextMeshProUGUI recipeTitle;
+    [SerializeField] private TextMeshProUGUI orderTitle;
     [SerializeField] private Transform iconContainer;
     [SerializeField] private Transform iconTemplate;
-    [SerializeField] private TextMeshProUGUI timeLeftToDeliverUI;
-    private float timeLeft;
-    public event EventHandler OnOrderTimeout;
+    [SerializeField] private OrderTimerUI orderTimer;
 
     private void Awake()
     {
         iconTemplate.gameObject.SetActive(false);
     }
 
-    public void SetRecipeSO(RecipeSO recipe)
+    public void SetOrder(Order order)
     {
-        recipeTitle.text = recipe.GetRecipeName();
+        orderTitle.text = order.GetRecipeName();
+        orderTimer.SetTimer(order.GetTimeout());
 
         foreach (Transform child in iconContainer)
         {
@@ -32,7 +31,7 @@ public class OrderTemplateUI : MonoBehaviour
         }
 
         // genero las recetas, las spawneo en el contenedor
-        foreach (RecipeSO.Ingredient ingredient in recipe.GetIngredients())
+        foreach (RecipeSO.Ingredient ingredient in order.GetRecipe().GetIngredients())
         {
             for (int i = 0; i < ingredient.amount; i++)
             {

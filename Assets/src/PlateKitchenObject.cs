@@ -54,7 +54,7 @@ public class PlateKitchenObject : KitchenObject
         }
         else
         {
-            throw new Exception("Forbidden ingredient!!");
+            SoundManager.Instance.PlayWarningSound(Vector3.zero);
         }
     }
 

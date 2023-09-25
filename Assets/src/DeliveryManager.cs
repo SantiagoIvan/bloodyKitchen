@@ -16,7 +16,7 @@ using UnityEngine.EventSystems;
  */
 public class DeliveryManager : MonoBehaviour
 {
-    private List<RecipeSO> orders;
+    private List<Order> orders;
     [SerializeField] private RecipesListSO recipes;
 
     private float spawnTime;
@@ -32,16 +32,16 @@ public class DeliveryManager : MonoBehaviour
     public event EventHandler OnWrongPlateDelivered;
     public class OnOrderSpawnedEventArgs
     {
-        public RecipeSO recipe;
+        public Order order;
     }
     public class OnOrderCompletedEventArgs
     {
-        public RecipeSO recipe;
+        public Order order;
     }
 
     private void Awake()
     {
-        orders = new List<RecipeSO>();
+        orders = new List<Order>();
     }
 
     private void Update()
@@ -60,16 +60,17 @@ public class DeliveryManager : MonoBehaviour
 
     private void SpawnOrder()
     {
-        RecipeSO newOrder = recipes.GetRandomRecipeSO();
-        orders.Add(newOrder);
-        OnOrderSpawned?.Invoke(this, new OnOrderSpawnedEventArgs { recipe = newOrder });
+        Order orderSpawned = OrderGenerator.Instance.GenerateNewOrder();
+        orders.Add(orderSpawned);
+        OnOrderSpawned?.Invoke(this, new OnOrderSpawnedEventArgs { order = orderSpawned });
+        Debug.Log("[LOG] ORDER_SPAWNED: "+orderSpawned.GetRecipe() +" - " + orderSpawned.GetTimeout().ToString());
     }
 
     private bool IsPlateCorrect(PlateKitchenObject plate, out string recipeName)
     {
         for (int i = 0; i < orders.Count; i++)
         {
-            if (orders[i].IsPlateCorrect(plate, out recipeName)) return true;
+            if (orders[i].GetRecipe().IsPlateCorrect(plate, out recipeName)) return true;
         }
 
         recipeName = null;
@@ -80,10 +81,12 @@ public class DeliveryManager : MonoBehaviour
     {
 
         ordersDelivered++;
-        RecipeSO target = recipes.GetRecipeSOByName(recipeName);
-        profit += target.GetPrice();
-        orders.Remove(target);
-        OnOrderCompleted?.Invoke(this, new OnOrderCompletedEventArgs { recipe = target });
+        //RecipeSO target = recipes.GetRecipeSOByName(recipeName);
+        //profit += target.GetPrice();
+        Order ord = orders.Find( order => order.GetRecipeName() == recipeName);
+        profit += ord.GetPrice();
+        orders.Remove(ord);
+        OnOrderCompleted?.Invoke(this, new OnOrderCompletedEventArgs { order = ord });
     }
     public void DeliverPlate(PlateKitchenObject plate)
     {
@@ -99,7 +102,7 @@ public class DeliveryManager : MonoBehaviour
         }
     }
 
-    public List<RecipeSO> GetOrders(){ return orders; }
+    public List<Order> GetOrders(){ return orders; }
 
     public int GetOrdersDelivered() { return ordersDelivered; }
     public int GetUncompletedOrders() { return uncompletedOrders + orders.Count; }
@@ -117,6 +120,6 @@ public class DeliveryManager : MonoBehaviour
     }
     public float GetLoss()
     {
-        return loss + orders.Sum<RecipeSO>(recipe => recipe.GetPrice());
+        return loss + orders.Sum<Order>(order => order.GetRecipe().GetPrice());
     }
 }
