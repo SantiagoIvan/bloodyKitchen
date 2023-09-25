@@ -33,7 +33,7 @@ Hay diferentes tipos de mesadas con los que se pueden interactuar
 Le agregué un efecto visual al horno cuando se te quema la comida para que le salga humito y se escuche una alarma de incendios.
 
 #### Pedidos
-A diferencia del juego original, cada pedido tiene un precio y un tiempo asociado. Si no terminas el plato en ese tiempo, perdes la venta.
+A diferencia del juego original, cada pedido tiene un precio y un tiempo asociado. Si no terminas el plato en ese tiempo, perdes la venta. Además, al estar cerca de alcanzar este tiempo de entrega, se dispara un efecto visual (titila el elemento OrdenUI) y un efecto de sonido.
 
 #### Niveles de dificultad
 - Facil: tiempo de juego: 120 seg; 2 recetas activas simultaneamente; Pedidos sin tiempo asociado
