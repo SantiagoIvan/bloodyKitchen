@@ -3,35 +3,32 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 using static GameManager;
 
 public class GameplayTimerUI : MonoBehaviour
 {
-    [SerializeField] private TextMeshProUGUI timerText;
-    private GameManager gameManager;
-    private float timer = 0;
+    [SerializeField] private Image timerImg;
+    [SerializeField] private GameTimer gameTimer;
+    [SerializeField] private Animator animator;
+    private const float threshold = 0.2f;
+    private const string CLOSE_TO_END_GAME = "CloseToEnd";
 
     private void Start()
     {
-        gameManager = GameManager.Instance;
-        gameManager.OnGameStarted += Instance_OnGameStarted;
+        timerImg.fillAmount = 1;
     }
-
-    private void Instance_OnGameStarted(object sender, OnGameStartedEventArgs e)
-    {
-        timer = e.limitTime;
-    }
-
     private void Update()
     {
-        if (gameManager.IsGamePlaying())
+        if (GameManager.Instance.IsGamePlaying())
         {
-            timer -= Time.deltaTime;
-            UpdateVisual();
+            float timer = gameTimer.GetNormalizedTime();
+            Debug.Log("timer: "+timer.ToString());
+            timerImg.fillAmount = timer;
+
+            if(timer < threshold) {
+                animator.SetBool(CLOSE_TO_END_GAME, true);
+            }
         }
-    }
-    private void UpdateVisual()
-    {
-        timerText.text = Math.Ceiling(timer).ToString();
     }
 }

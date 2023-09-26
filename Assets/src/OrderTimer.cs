@@ -33,6 +33,7 @@ public class OrderTimer : MonoBehaviour
     }
     private void Update()
     {
+        if (!GameManager.Instance.IsGamePlaying()) return;
         if(timer > 0)
         {
             timer -= Time.deltaTime;
