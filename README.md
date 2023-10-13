@@ -39,5 +39,8 @@ A diferencia del juego original, cada pedido tiene un precio y un tiempo asociad
 - Facil: tiempo de juego: 120 seg; 2 recetas activas simultaneamente; Pedidos sin tiempo asociado
 - Dificil: tiempo de juego: 100 seg; 4 recetas activas simultaneamente; Pedidos con tiempo asociado
 
+#### Estadísticas
+Al final de cada partida podes ver todos los platos entregados junto con las ganancias, así como también los platos perdidos y las pérdidas
+
 # Proximamente
 Cuando termine de hacer las modificaciones pendientes, lo voy a ir migrando a algo mas gore.
